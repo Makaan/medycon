@@ -33,7 +33,7 @@ public class interfaz extends JFrame {
         GridBagLayout gbl_panelConexion = new GridBagLayout();
         panelConexion.setLayout(gbl_panelConexion);
         
-	        JComboBox comboBoxConexiones = new JComboBox();
+	        JComboBox<String> comboBoxConexiones = new JComboBox<String>();
 	        GridBagConstraints gbc_comboBoxConexiones = new GridBagConstraints();
 	        gbc_comboBoxConexiones.anchor = GridBagConstraints.NORTH;
 	        gbc_comboBoxConexiones.gridwidth = 3;
@@ -105,7 +105,7 @@ public class interfaz extends JFrame {
 		        panelTipoNivel.add(lblTipoDeNivel, gbc_lblTipoDeNivel);
 		        
 		    	String[] valores = {"Porcentaje (%)","Centimetros (cm)"};
-		        JComboBox comboBoxTipoNivel = new JComboBox(valores);
+		        JComboBox<String> comboBoxTipoNivel = new JComboBox<String>(valores);
 		        comboBoxTipoNivel.setSelectedItem(0);
 		        GridBagConstraints gbc_comboBoxTipoNivel = new GridBagConstraints();
 		        gbc_comboBoxTipoNivel.insets = new Insets(0, 0, 5, 5);
@@ -149,6 +149,7 @@ public class interfaz extends JFrame {
 		        panelNivelAbsoluto.add(lblNivelAbsolutoMax, gbc_lblNivelAbsolutoMax);
 		        
 		        JTextField textFieldNivelAbsolutoMax = new JTextField();
+		        textFieldNivelAbsolutoMax.setEditable(false);
 		        GridBagConstraints gbc_textFieldNivelAbsolutoMax = new GridBagConstraints();
 		        gbc_textFieldNivelAbsolutoMax.insets = new Insets(0,0,5,0);
 		        gbc_textFieldNivelAbsolutoMax.gridx = 0;
@@ -164,6 +165,7 @@ public class interfaz extends JFrame {
 		        panelNivelAbsoluto.add(lblNivelAbsolutoMin, gbc_lblNivelAbsolutoMin);
 		        
 		        JTextField textFieldNivelAbsolutoMin = new JTextField();
+		        textFieldNivelAbsolutoMin.setEditable(false);
 		        GridBagConstraints gbc_textFieldNivelAbsolutoMin = new GridBagConstraints();
 		        gbc_textFieldNivelAbsolutoMin.insets = new Insets(0,0,5,0);
 		        gbc_textFieldNivelAbsolutoMin.gridx = 0;
@@ -289,6 +291,7 @@ public class interfaz extends JFrame {
 			        panelRele1.add(lblNivelRele1Max, gbc_lblNivelRele1Max);
 			        
 			        JTextField textFieldNivelRele1Max = new JTextField();
+			        textFieldNivelRele1Max.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele1Max = new GridBagConstraints();
 			        gbc_textFieldNivelRele1Max.insets = new Insets(0,0,5,0);
 			        gbc_textFieldNivelRele1Max.gridx = 0;
@@ -305,6 +308,7 @@ public class interfaz extends JFrame {
 			        panelRele1.add(lblNivelRele1Min, gbc_lblNivelRele1Min);
 			        
 			        JTextField textFieldNivelRele1Min = new JTextField();
+			        textFieldNivelRele1Min.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele1Min = new GridBagConstraints();
 			        gbc_textFieldNivelRele1Min.insets = new Insets(0,0,5,0);
 			        gbc_textFieldNivelRele1Min.gridx = 0;
@@ -355,6 +359,7 @@ public class interfaz extends JFrame {
 			        panelRele2.add(lblNivelRele2Max, gbc_lblNivelRele2Max);
 			        
 			        JTextField textFieldNivelRele2Max = new JTextField();
+			        textFieldNivelRele2Max.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele2Max = new GridBagConstraints();
 			        gbc_textFieldNivelRele2Max.insets = new Insets(0,0,5,0);
 			        gbc_textFieldNivelRele2Max.gridx = 0;
@@ -371,6 +376,7 @@ public class interfaz extends JFrame {
 			        panelRele2.add(lblNivelRele2Min, gbc_lblNivelRele2Min);
 			        
 			        JTextField textFieldNivelRele2Min = new JTextField();
+			        textFieldNivelRele2Min.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele2Min = new GridBagConstraints();
 			        gbc_textFieldNivelRele2Min.insets = new Insets(0,0,5,0);
 			        gbc_textFieldNivelRele2Min.gridx = 0;

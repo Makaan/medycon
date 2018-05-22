@@ -8,24 +8,28 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import almacenamiento.AlmacenamientoArchivo;
 import almacenamiento.AlmacenamientoConexiones;
+import almacenamiento.AlmacenamientoDatosConexion;
 
 public class Test {
 	
 	public static void main(String[] args) {
-		AlmacenamientoConexiones ac = AlmacenamientoConexiones.getInstancia();
+		AlmacenamientoDatosConexion ac = AlmacenamientoDatosConexion.getInstancia();
 		
-		ac.guardarConexion("test", "0.0.0.0", "1");
-		ac.guardarConexion("tes2", "0.1.0.1", "2");
-		ac.guardarConexion("test", "0.0.0.0", "1");
+		ac.guardarDato("<asd>");
+		ac.guardarDato("<asd2>");
+		ac.guardarDato("<asd3>");
 		
-		for(Vector<String> vector : ac.getConexiones().values()) {
-			System.out.println(vector.get(0));
-			System.out.println(vector.get(1));
-			System.out.println();
+		Map<Date,String> map = ac.getDatos();
+		System.out.println(map.size());
+		for(Entry<Date, String> entry : map.entrySet()) {
+			System.out.println(entry.getKey()+" "+entry.getValue());
 		}
     
 	}

@@ -13,12 +13,12 @@ import java.util.Vector;
 public class AlmacenamientoConexiones {
 	
 
-
+	private final String NOMBRE_ARCHIVO = "conexiones.txt";
 	private static AlmacenamientoConexiones instancia;
 	private AlmacenamientoArchivo almacenamientoArchivo;
 	
 	private AlmacenamientoConexiones() {
-		almacenamientoArchivo = new AlmacenamientoArchivo();
+		almacenamientoArchivo = new AlmacenamientoArchivo(NOMBRE_ARCHIVO);
     }
 	
 	public static AlmacenamientoConexiones getInstancia() {
@@ -32,14 +32,14 @@ public class AlmacenamientoConexiones {
 		Map<String, Vector<String>> mapeoConexiones = getConexiones();
 		if(mapeoConexiones.get(nombre) == null) {
 			String conexion = nombre+","+ip+","+id;
-			almacenamientoArchivo.guardarConexion(conexion);
+			almacenamientoArchivo.guardarEntrada(conexion);
 		}
 		
 	}
 	
 	public Map<String, Vector<String>> getConexiones() {
 		HashMap<String, Vector<String>> mapeoConexiones = new HashMap<String, Vector<String>>();
-		List<String> listaConexiones = almacenamientoArchivo.getConexiones();
+		List<String> listaConexiones = almacenamientoArchivo.getEntradas();
 		for(String conexion : listaConexiones) {
 			String[] tokens = conexion.split(",");
 			String nombre = tokens[0];

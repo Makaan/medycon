@@ -13,9 +13,10 @@ import java.util.List;
 
 public class AlmacenamientoArchivo {
 	
-	private final String nombreArchivo = "conexiones.txt";
+	private String nombreArchivo;
 	
-	public AlmacenamientoArchivo() {
+	public AlmacenamientoArchivo(String nombreArchivo) {
+		this.nombreArchivo = nombreArchivo;
 		File archivo = new File(nombreArchivo);
 		
         try {
@@ -30,7 +31,7 @@ public class AlmacenamientoArchivo {
         }
 	}
 	
-	public void guardarConexion(String conexion) {
+	public void guardarEntrada(String conexion) {
 		try {
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(nombreArchivo, true)));
 			writer.println(conexion);
@@ -42,7 +43,7 @@ public class AlmacenamientoArchivo {
 		
 	}
 	
-	public List<String> getConexiones() {
+	public List<String> getEntradas() {
 		ArrayList<String> conexiones = new ArrayList<String>();
 		try {
         	

@@ -1,24 +1,47 @@
 package interfaz;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.DefaultTableModel;
 
-public class interfaz extends JFrame {
+import conexion.AdminConexiones;
+
+public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 	
 	private final Color COLOR_AGUA = new Color(90,188,216);
 
     private static final long serialVersionUID = 1L;
     private JTable table;
+    private DefaultTableModel tableModel;
+    private JPanel panelConexion;
+    
+    private static AdminConexiones adminConexiones;
+    private static AdminTabla adminTabla = AdminTabla.getInstancia();
 
-    public interfaz() {
+    public Interfaz() {
+    	
+    	AdminMensajes.getInstancia().setInterfaz(this);
+    	
+    	adminConexiones = new AdminConexiones();
+    	adminTabla.setInterfaz(this);
+    	new Thread(adminConexiones).start();
+    	
+    	
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.rowWeights = new double[]{0.0, 0.0};
         gridBagLayout.columnWeights = new double[]{1.0, 0.0};
         getContentPane().setLayout(gridBagLayout);// set LayoutManager
         setPreferredSize(new Dimension(1280,720));
-        JPanel panelConexion = new JPanel();
+        panelConexion = new JPanel();
         Border eBorder = BorderFactory.createEtchedBorder();
+        
+        /* PANEL CONEXION */
 
         panelConexion.setBorder(BorderFactory.createTitledBorder(eBorder, "Conexion"));
         GridBagConstraints gbc_panelConexion = new GridBagConstraints();
@@ -33,7 +56,7 @@ public class interfaz extends JFrame {
         GridBagLayout gbl_panelConexion = new GridBagLayout();
         panelConexion.setLayout(gbl_panelConexion);
         
-	        JComboBox<String> comboBoxConexiones = new JComboBox<String>();
+	        JComboBox<String> comboBoxConexiones = new JComboBox<String>(adminConexiones.getNombreConexiones());
 	        GridBagConstraints gbc_comboBoxConexiones = new GridBagConstraints();
 	        gbc_comboBoxConexiones.anchor = GridBagConstraints.NORTH;
 	        gbc_comboBoxConexiones.gridwidth = 3;
@@ -44,6 +67,14 @@ public class interfaz extends JFrame {
 	        panelConexion.add(comboBoxConexiones, gbc_comboBoxConexiones);
 	        
 	        JButton btnConectar = new JButton("Conectar");
+	        btnConectar.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					adminConexiones.nuevaConexion(comboBoxConexiones.getSelectedItem().toString());
+					
+				}
+			});
 	        GridBagConstraints gbc_btnConectar = new GridBagConstraints();
 	        gbc_btnConectar.fill = GridBagConstraints.BOTH;
 	        gbc_btnConectar.insets = new Insets(0, 0, 5, 5);
@@ -51,21 +82,49 @@ public class interfaz extends JFrame {
 	        gbc_btnConectar.gridy = 1;
 	        panelConexion.add(btnConectar, gbc_btnConectar);
         
-        JButton btnDesconectar = new JButton("Desconectar");
-        GridBagConstraints gbc_btnDesconectar = new GridBagConstraints();
-        gbc_btnDesconectar.fill = GridBagConstraints.BOTH;
-        gbc_btnDesconectar.insets = new Insets(0, 0, 5, 5);
-        gbc_btnDesconectar.gridx = 1;
-        gbc_btnDesconectar.gridy = 1;
-        panelConexion.add(btnDesconectar, gbc_btnDesconectar);
-        
-        JButton btnNuevaConexion = new JButton("Nueva Conexion");
-        GridBagConstraints gbc_btnNuevaConexion = new GridBagConstraints();
-        gbc_btnNuevaConexion.insets = new Insets(0, 0, 5, 0);
-        gbc_btnNuevaConexion.fill = GridBagConstraints.BOTH;
-        gbc_btnNuevaConexion.gridx = 2;
-        gbc_btnNuevaConexion.gridy = 1;
-        panelConexion.add(btnNuevaConexion, gbc_btnNuevaConexion);
+	        JButton btnDesconectar = new JButton("Desconectar");
+	        GridBagConstraints gbc_btnDesconectar = new GridBagConstraints();
+	        gbc_btnDesconectar.fill = GridBagConstraints.BOTH;
+	        gbc_btnDesconectar.insets = new Insets(0, 0, 5, 5);
+	        gbc_btnDesconectar.gridx = 1;
+	        gbc_btnDesconectar.gridy = 1;
+	        panelConexion.add(btnDesconectar, gbc_btnDesconectar);
+	        
+	        JButton btnNuevaConexion = new JButton("Nueva Conexion");
+	        btnNuevaConexion.addActionListener(new ActionListener() {
+	        	JTextField nombre = new JTextField();
+	        	JTextField ip = new JTextField();
+	        	JTextField id = new JTextField();
+	        	Object[] message = {
+	        	    "Nombre:", nombre,
+	        	    "ip:", ip,
+	        	    "id:", id
+	        	};
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int option = JOptionPane.showConfirmDialog(null, message, "Crear Nueva Conexion", JOptionPane.OK_CANCEL_OPTION);
+		        	if (option == JOptionPane.OK_OPTION) {
+		        		if(!nombre.getText().equals("") || !ip.getText().equals("") || !id.getText().equals("")) {
+		        			if (isValidIP(ip.getText())) {
+			        	        adminConexiones.crearConexion(nombre.getText(), ip.getText(), id.getText());
+			        	        comboBoxConexiones.addItem(nombre.getText());
+			        	    } else {
+			        	    	mostrarMensajeError("La IP ingresada no es valida");
+			        	    }
+		        		}
+		        		else {
+		        			mostrarMensajeError("Se deben completar todos los campos");
+		        		}
+		        	    
+		        	}
+				}
+			});
+	        GridBagConstraints gbc_btnNuevaConexion = new GridBagConstraints();
+	        gbc_btnNuevaConexion.insets = new Insets(0, 0, 5, 0);
+	        gbc_btnNuevaConexion.fill = GridBagConstraints.BOTH;
+	        gbc_btnNuevaConexion.gridx = 2;
+	        gbc_btnNuevaConexion.gridy = 1;
+	        panelConexion.add(btnNuevaConexion, gbc_btnNuevaConexion);
         
         /* PANEL INFO */
 
@@ -415,29 +474,13 @@ public class interfaz extends JFrame {
         getContentPane().add(panelDatos, gbc_panelDatos); // add component to the ContentPane
         panelDatos.setLayout(new BorderLayout(0, 0));
         
-        String[] columnNames = {"First Name",
-                "Last Name",
-                "Sport",
-                "# of Years",
-                "Vegetarian"};
-
-		Object[][] data = {
-		{"Kathy", "Smith",
-		"Snowboarding", new Integer(5), new Boolean(false)},
-		{"John", "Doe",
-		"Rowing", new Integer(3), new Boolean(true)},
-		{"Sue", "Black",
-		"Knitting", new Integer(2), new Boolean(false)},
-		{"Jane", "White",
-		"Speed reading", new Integer(20), new Boolean(true)},
-		{"Joe", "Brown",
-		"Pool", new Integer(10), new Boolean(false)}
-		};
-		table = new JTable(data, columnNames);
-	    table.setFillsViewportHeight(true);
         
-		
+         
+        
+        
+        table.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(table);
+        
         panelDatos.add(scrollPane, BorderLayout.CENTER);
         
        
@@ -458,14 +501,44 @@ public class interfaz extends JFrame {
         pack();
         setVisible(true); // important
     }
+    
+    public static boolean isValidIP(String ipAddr){
+        Pattern ptn = Pattern.compile("^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$");
+        Matcher mtch = ptn.matcher(ipAddr);
+        return mtch.find();
+    }
 
     public static void main(String[] args) {
+    	
+    	new Thread(adminConexiones);
         javax.swing.SwingUtilities.invokeLater(new Runnable() { // important
-
+        	
             @Override
             public void run() {
-                interfaz borderPanels = new interfaz();
+                Interfaz gui = new Interfaz();
             }
         });
     }
+
+	public void mostrarMensajeError(String msg) {
+		JOptionPane.showMessageDialog(null,msg, "Error", JOptionPane.ERROR_MESSAGE);
+		
+	}
+	
+	
+	
+	@Override
+	public void actualizarDatosTabla(String[][] datos) {
+		tableModel = new DefaultTableModel(datos, adminTabla.getNombresColumnas());
+		table = new JTable(tableModel);
+	    
+		tableModel.setDataVector(datos, adminTabla.getNombresColumnas());
+		
+	}
+
+	@Override
+	public void aggregarDatoTabla(String[] dato) {
+		tableModel.addRow(dato);
+		
+	}
 }

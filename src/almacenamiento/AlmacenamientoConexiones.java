@@ -37,6 +37,20 @@ public class AlmacenamientoConexiones {
 		
 	}
 	
+	public Vector<String> getConexion(String nombre) {
+		Vector<String> vectorDatos = new Vector<String>();
+		List<String> listaConexiones = almacenamientoArchivo.getEntradas();
+		for(String conexion : listaConexiones) {
+			String[] tokens = conexion.split(",");
+			String nombreConexion = tokens[0];
+			if(nombreConexion.equals(nombre)) {
+				vectorDatos.add(tokens[1]); //IP
+				vectorDatos.add(tokens[2]); //ID
+			}
+		}
+		return vectorDatos;
+	}
+	
 	public Map<String, Vector<String>> getConexiones() {
 		HashMap<String, Vector<String>> mapeoConexiones = new HashMap<String, Vector<String>>();
 		List<String> listaConexiones = almacenamientoArchivo.getEntradas();

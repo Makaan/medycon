@@ -3,6 +3,7 @@ package interfaz;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import conexion.AdminConexiones;
 
-public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
+public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, InfoGUI{
 	
 	private final Color COLOR_AGUA = new Color(90,188,216);
 
@@ -23,10 +24,21 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
     
     private static AdminConexiones adminConexiones;
     private static AdminTabla adminTabla = AdminTabla.getInstancia();
+    
+    JTextField textFieldNivelAbsolutoMax;
+    JTextField textFieldNivelAbsolutoMin;
+    JTextField textFieldNivelRele1Max;
+    JTextField textFieldNivelRele1Min;
+    JTextField textFieldNivelRele2Max;
+    JTextField textFieldNivelRele2Min;
+    JLabel lblNivelRele1Grafico;
+    JLabel lblNivelRele2Grafico;
+    JTextArea textAreaAbsolutoGrafico;
 
     public Interfaz() {
     	
     	AdminMensajes.getInstancia().setInterfaz(this);
+    	AdminInfo.getInstancia().setInterfaz(this);
     	
     	adminConexiones = new AdminConexiones();
     	adminTabla.setInterfaz(this);
@@ -207,7 +219,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 		        gbc_lblNivelAbsolutoMax.gridy = 1;
 		        panelNivelAbsoluto.add(lblNivelAbsolutoMax, gbc_lblNivelAbsolutoMax);
 		        
-		        JTextField textFieldNivelAbsolutoMax = new JTextField();
+		        textFieldNivelAbsolutoMax = new JTextField();
 		        textFieldNivelAbsolutoMax.setEditable(false);
 		        GridBagConstraints gbc_textFieldNivelAbsolutoMax = new GridBagConstraints();
 		        gbc_textFieldNivelAbsolutoMax.insets = new Insets(0,0,5,0);
@@ -223,7 +235,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 		        gbc_lblNivelAbsolutoMin.gridy = 3;
 		        panelNivelAbsoluto.add(lblNivelAbsolutoMin, gbc_lblNivelAbsolutoMin);
 		        
-		        JTextField textFieldNivelAbsolutoMin = new JTextField();
+		        textFieldNivelAbsolutoMin = new JTextField();
 		        textFieldNivelAbsolutoMin.setEditable(false);
 		        GridBagConstraints gbc_textFieldNivelAbsolutoMin = new GridBagConstraints();
 		        gbc_textFieldNivelAbsolutoMin.insets = new Insets(0,0,5,0);
@@ -232,7 +244,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 		        gbc_textFieldNivelAbsolutoMin.fill = GridBagConstraints.HORIZONTAL;
 		        panelNivelAbsoluto.add(textFieldNivelAbsolutoMin, gbc_textFieldNivelAbsolutoMin);
 		        
-		        JTextArea textAreaAbsolutoGrafico = new JTextArea("----\n---\n---\n---\n---\n---\n---\n---\n---\n---\n----");
+		        textAreaAbsolutoGrafico = new JTextArea("----\n---\n---\n---\n---\n---\n---\n---\n---\n---\n----");
 		        textAreaAbsolutoGrafico.setRows(10);
 		        textAreaAbsolutoGrafico.setEditable(false);
 		        textAreaAbsolutoGrafico.setBackground(Color.LIGHT_GRAY);
@@ -349,7 +361,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 			        gbc_lblNivelRele1Max.gridy = 1;
 			        panelRele1.add(lblNivelRele1Max, gbc_lblNivelRele1Max);
 			        
-			        JTextField textFieldNivelRele1Max = new JTextField();
+			        textFieldNivelRele1Max = new JTextField();
 			        textFieldNivelRele1Max.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele1Max = new GridBagConstraints();
 			        gbc_textFieldNivelRele1Max.insets = new Insets(0,0,5,0);
@@ -366,7 +378,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 			        gbc_lblNivelRele1Min.gridy = 3;
 			        panelRele1.add(lblNivelRele1Min, gbc_lblNivelRele1Min);
 			        
-			        JTextField textFieldNivelRele1Min = new JTextField();
+			        textFieldNivelRele1Min = new JTextField();
 			        textFieldNivelRele1Min.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele1Min = new GridBagConstraints();
 			        gbc_textFieldNivelRele1Min.insets = new Insets(0,0,5,0);
@@ -377,8 +389,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 			        gbc_textFieldNivelRele1Min.insets = new Insets(0, 20, 5, 20);
 			        panelRele1.add(textFieldNivelRele1Min, gbc_textFieldNivelRele1Min);
 			        
-			        JLabel lblNivelRele1Grafico = new JLabel("ON");
+			        lblNivelRele1Grafico = new JLabel("");
 			        lblNivelRele1Grafico.setBorder(BorderFactory.createLineBorder(Color.black));
+			        lblNivelRele1Grafico.setOpaque(true);
 			        GridBagConstraints gbc_lblNivelRele1Grafico = new GridBagConstraints();
 			        gbc_lblNivelRele1Grafico.insets = new Insets(0, 0, 5, 0);
 			        gbc_lblNivelRele1Grafico.fill = GridBagConstraints.BOTH;
@@ -417,7 +430,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 			        gbc_lblNivelRele2Max.gridy = 1;
 			        panelRele2.add(lblNivelRele2Max, gbc_lblNivelRele2Max);
 			        
-			        JTextField textFieldNivelRele2Max = new JTextField();
+			        textFieldNivelRele2Max = new JTextField();
 			        textFieldNivelRele2Max.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele2Max = new GridBagConstraints();
 			        gbc_textFieldNivelRele2Max.insets = new Insets(0,0,5,0);
@@ -434,7 +447,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 			        gbc_lblNivelRele2Min.gridy = 3;
 			        panelRele2.add(lblNivelRele2Min, gbc_lblNivelRele2Min);
 			        
-			        JTextField textFieldNivelRele2Min = new JTextField();
+			        textFieldNivelRele2Min = new JTextField();
 			        textFieldNivelRele2Min.setEditable(false);
 			        GridBagConstraints gbc_textFieldNivelRele2Min = new GridBagConstraints();
 			        gbc_textFieldNivelRele2Min.insets = new Insets(0,0,5,0);
@@ -445,8 +458,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 			        gbc_textFieldNivelRele2Min.weightx = 40;
 			        panelRele2.add(textFieldNivelRele2Min, gbc_textFieldNivelRele2Min);
 			        
-			        JLabel lblNivelRele2Grafico = new JLabel("ON");
+			        lblNivelRele2Grafico = new JLabel("");
 			        lblNivelRele2Grafico.setBorder(BorderFactory.createLineBorder(Color.black));
+			        lblNivelRele2Grafico.setOpaque(true);
 			        GridBagConstraints gbc_lblNivelRele2Grafico = new GridBagConstraints();
 			        gbc_lblNivelRele2Grafico.insets = new Insets(0, 20, 5, 20);
 			        gbc_lblNivelRele2Grafico.fill = GridBagConstraints.BOTH;
@@ -502,12 +516,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
         setVisible(true); // important
     }
     
-    public static boolean isValidIP(String ipAddr){
-        Pattern ptn = Pattern.compile("^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$");
-        Matcher mtch = ptn.matcher(ipAddr);
-        return mtch.find();
-    }
-
     public static void main(String[] args) {
     	
     	new Thread(adminConexiones);
@@ -519,6 +527,14 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
             }
         });
     }
+    
+    public static boolean isValidIP(String ipAddr){
+        Pattern ptn = Pattern.compile("^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$");
+        Matcher mtch = ptn.matcher(ipAddr);
+        return mtch.find();
+    }
+
+    
 
 	public void mostrarMensajeError(String msg) {
 		JOptionPane.showMessageDialog(null,msg, "Error", JOptionPane.ERROR_MESSAGE);
@@ -539,6 +555,42 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>{
 	@Override
 	public void aggregarDatoTabla(String[] dato) {
 		tableModel.addRow(dato);
+		
+	}
+
+	@Override
+	public void actualizarInfo(Map<String, String> datos) {
+		
+		textFieldNivelAbsolutoMax.setText(datos.get("NivelAbsolutoMax"));
+	    textFieldNivelAbsolutoMin.setText(datos.get("NivelAbsolutoMin"));
+	    //textAreaAbsolutoGrafico.bac
+	    
+	    
+	    textFieldNivelRele1Max.setText(datos.get("Rele1Max"));
+	    textFieldNivelRele1Min.setText(datos.get("Rele1Min"));
+	    textFieldNivelRele2Max.setText(datos.get("Rele2Max"));
+	    textFieldNivelRele2Min.setText(datos.get("Rele2Min"));
+	    String rele1 = datos.get("Rele1");
+	    if(rele1.equals("0")) {
+	    	lblNivelRele1Grafico.setText("OFF");
+	    	lblNivelRele1Grafico.setBackground(Color.RED);
+	    }
+	    else {
+	    	lblNivelRele1Grafico.setText("ON");
+	    	lblNivelRele1Grafico.setBackground(Color.GREEN);
+	    }
+	    
+	    String rele2 = datos.get("Rele2");
+	    if(rele2.equals("0")) {
+	    	lblNivelRele2Grafico.setText("OFF");
+	    	lblNivelRele2Grafico.setBackground(Color.RED);
+	    }
+	    else {
+	    	lblNivelRele2Grafico.setText("ON");
+	    	lblNivelRele2Grafico.setBackground(Color.GREEN);
+	    }
+		
+		
 		
 	}
 }

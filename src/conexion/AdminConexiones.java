@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import almacenamiento.AlmacenamientoConexiones;
+import interfaz.AdminInfo;
 import interfaz.AdminMensajes;
 import interfaz.AdminTabla;
 
@@ -18,6 +19,7 @@ public class AdminConexiones implements Runnable {
 	private static AlmacenamientoConexiones almacenamientoConexiones = AlmacenamientoConexiones.getInstancia();
 	private static AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 	private static AdminTabla adminTabla = AdminTabla.getInstancia();
+	private static AdminInfo adminInfo = AdminInfo.getInstancia();
 	
 	public AdminConexiones() {
 	}
@@ -33,6 +35,7 @@ public class AdminConexiones implements Runnable {
 					System.out.println(resu);
 					if(!resu.equals("")) {
 						adminTabla.agregarFila(resu);
+						adminInfo.actualizarDatos(resu);
 					}
 					
 		 		}

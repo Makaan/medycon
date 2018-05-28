@@ -100,4 +100,8 @@ public class AdminTabla {
 		return "on";
 	}
 	
+	public List<String> getDatosTabla() {
+		return almacenamientoArchivo.getEntradas();
+	}
+	
 }

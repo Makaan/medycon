@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 
+import almacenamiento.EscritorExcel;
 import conexion.AdminConexiones;
 
 public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, InfoGUI{
@@ -509,6 +510,15 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         panel.add(btnBorrarLista);
         
         JButton btnExportar = new JButton("Exportar");
+        btnExportar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EscritorExcel.exportar();
+				
+			}
+        	
+        });
         panel.add(btnExportar);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // important

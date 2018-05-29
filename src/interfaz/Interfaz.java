@@ -3,6 +3,11 @@ package interfaz;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +15,18 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
+
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler.LegendPosition;
+import org.knowm.xchart.style.colors.ChartColor;
+import org.knowm.xchart.style.colors.XChartSeriesColors;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import almacenamiento.EscritorExcel;
 import conexion.AdminConexiones;
@@ -148,6 +165,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         gbc_panelInfo.anchor = GridBagConstraints.NORTHWEST;
         gbc_panelInfo.gridx = 0;
         gbc_panelInfo.gridy = 1;
+        gbc_panelInfo.gridheight = 2;
         gbc_panelInfo.weightx = 20;
         gbc_panelInfo.weighty = 60;
         gbc_panelInfo.insets = new Insets(2, 2, 5, 5);
@@ -484,42 +502,52 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         gbc_panelDatos.gridy = 0;
         gbc_panelDatos.gridwidth = 1;
         gbc_panelDatos.gridheight = 2;
-        gbc_panelDatos.weightx = /*gbc.weighty = */ 80;
+        gbc_panelDatos.weightx = 80;
+        gbc_panelDatos.weighty = 80;
         gbc_panelDatos.insets = new Insets(2, 2, 5, 2);
         getContentPane().add(panelDatos, gbc_panelDatos); // add component to the ContentPane
         panelDatos.setLayout(new BorderLayout(0, 0));
-        
-        
-         
-        
         
         table.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(table);
         
         panelDatos.add(scrollPane, BorderLayout.CENTER);
         
+	        JPanel panelBotonesDatos = new JPanel();
+	        panelDatos.add(panelBotonesDatos, BorderLayout.SOUTH);
+	        
+	        JButton btnBorrarLista = new JButton("Borrar Lista");
+	        panelBotonesDatos.add(btnBorrarLista);
+	        
+	        JButton btnExportar = new JButton("Exportar");
+	        btnExportar.addActionListener(new ActionListener() {
+	
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					EscritorExcel.exportar();
+					
+				}
+	        	
+	        });
+	        panelBotonesDatos.add(btnExportar);
+        
+        /* PANEL GRAFICO */
+	        
+        JPanel panelGrafico = new XChartPanel(ConstructorGrafico.getChart());
+        panelDatos.setBorder(BorderFactory.createTitledBorder(eBorder, "Grafico de consumo"));
+        GridBagConstraints gbc_panelGrafico = new GridBagConstraints();
+        gbc_panelGrafico.fill = GridBagConstraints.BOTH;
+        gbc_panelGrafico.anchor = GridBagConstraints.NORTHWEST;
+        gbc_panelGrafico.gridx = 1;
+        gbc_panelGrafico.gridy = 2;
+        gbc_panelGrafico.gridwidth = 1;
+        gbc_panelGrafico.gridheight = 1;
+        gbc_panelGrafico.weightx = 80;
+        gbc_panelGrafico.weighty = 40;
+        gbc_panelGrafico.insets = new Insets(2, 2, 5, 2);
+        getContentPane().add(panelGrafico, gbc_panelGrafico);
+        
        
-        
-        
-
-        
-        JPanel panel = new JPanel();
-        panelDatos.add(panel, BorderLayout.SOUTH);
-        
-        JButton btnBorrarLista = new JButton("Borrar Lista");
-        panel.add(btnBorrarLista);
-        
-        JButton btnExportar = new JButton("Exportar");
-        btnExportar.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				EscritorExcel.exportar();
-				
-			}
-        	
-        });
-        panel.add(btnExportar);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // important
         pack();
@@ -599,8 +627,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	    	lblNivelRele2Grafico.setText("ON");
 	    	lblNivelRele2Grafico.setBackground(Color.GREEN);
 	    }
-		
-		
-		
 	}
+	
+	
 }

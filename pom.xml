@@ -26,6 +26,12 @@
 	    <groupId>org.apache.poi</groupId>
 	    <artifactId>poi-ooxml</artifactId>
 	    <version>3.17</version>
-</dependency>
+	</dependency>
+	<dependency>
+		<groupId>org.knowm.xchart</groupId>
+		<artifactId>xchart</artifactId>
+		<version>3.5.2</version>
+	</dependency>
+
   </dependencies>
 </project>

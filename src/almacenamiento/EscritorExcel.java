@@ -1,7 +1,5 @@
 package almacenamiento;
 
-import interfaz.AdminTabla;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,15 +9,14 @@ import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import controlador.AdminTabla;
+
 public class EscritorExcel {
-	
-	private static AdminTabla adminTabla = AdminTabla.getInstancia();
 	
 	private EscritorExcel() {}
 	
-	public static void exportar() {
+	public static void exportar(String[] nombresColumnas, List<String> listaDatos, String nombre) {
 		
-		String[] nombresColumnas = adminTabla.getNombresColumnas();
 		Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
         /* CreationHelper helps us create instances of various things like DataFormat, 
@@ -45,8 +42,6 @@ public class EscritorExcel {
             celda.setCellStyle(estiloCabecera);
         }
         
-        List<String> listaDatos = adminTabla.getDatosTabla();
-        
         int numFila = 1;
         for(String dato : listaDatos) {
         	String[] tokens = dato.split(",");
@@ -64,7 +59,7 @@ public class EscritorExcel {
         // Write the output to a file
         FileOutputStream fileOut;
 		try {
-			fileOut = new FileOutputStream("datos-exportados.xlsx");
+			fileOut = new FileOutputStream("datos-exportados-"+nombre+".xlsx");
 			workbook.write(fileOut);
 	        fileOut.close();
 

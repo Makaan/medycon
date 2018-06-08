@@ -3,11 +3,8 @@ package interfaz;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,51 +13,50 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.XYSeries;
-import org.knowm.xchart.style.Styler.LegendPosition;
-import org.knowm.xchart.style.colors.ChartColor;
-import org.knowm.xchart.style.colors.XChartSeriesColors;
-import org.knowm.xchart.style.lines.SeriesLines;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 
-import almacenamiento.EscritorExcel;
 import conexion.AdminConexiones;
+import controlador.AdminMensajes;
+import controlador.AdminTabla;
+import controlador.Controlador;
 
-public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, InfoGUI{
+public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, InfoGUI, GraficoGUI{
 	
 	private final Color COLOR_AGUA = new Color(90,188,216);
 
     private static final long serialVersionUID = 1L;
+    
+    private static AdminConexiones adminConexiones = AdminConexiones.getInstancia();
+    
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel panelConexion;
+    private Controlador controlador;
     
-    private static AdminConexiones adminConexiones;
-    private static AdminTabla adminTabla = AdminTabla.getInstancia();
+    private JTextField textFieldNivelAbsolutoMax;
+    private JTextField textFieldNivelAbsolutoMin;
+    private JTextField textFieldNivelRele1Max;
+    private JTextField textFieldNivelRele1Min;
+    private JTextField textFieldNivelRele2Max;
+    private JTextField textFieldNivelRele2Min;
+    private JLabel lblNivelRele1Grafico;
+    private JLabel lblNivelRele2Grafico;
+    private JTextArea textAreaAbsolutoGrafico;
+    private JPanel panelGrafico;
+    private JScrollPane scrollPane;
+    JPanel panelContenedorGrafico;
     
-    JTextField textFieldNivelAbsolutoMax;
-    JTextField textFieldNivelAbsolutoMin;
-    JTextField textFieldNivelRele1Max;
-    JTextField textFieldNivelRele1Min;
-    JTextField textFieldNivelRele2Max;
-    JTextField textFieldNivelRele2Min;
-    JLabel lblNivelRele1Grafico;
-    JLabel lblNivelRele2Grafico;
-    JTextArea textAreaAbsolutoGrafico;
+    private String conexionSeleccionada;
 
     public Interfaz() {
     	
-    	AdminMensajes.getInstancia().setInterfaz(this);
-    	AdminInfo.getInstancia().setInterfaz(this);
+    	this.setTitle("MedyCon");
     	
-    	adminConexiones = new AdminConexiones();
-    	adminTabla.setInterfaz(this);
-    	new Thread(adminConexiones).start();
+    	AdminMensajes.getInstancia().setInterfaz(this);
+    	
+    	
+    	
     	
     	
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -87,6 +83,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         panelConexion.setLayout(gbl_panelConexion);
         
 	        JComboBox<String> comboBoxConexiones = new JComboBox<String>(adminConexiones.getNombreConexiones());
+	        conexionSeleccionada = comboBoxConexiones.getSelectedItem().toString();
 	        GridBagConstraints gbc_comboBoxConexiones = new GridBagConstraints();
 	        gbc_comboBoxConexiones.anchor = GridBagConstraints.NORTH;
 	        gbc_comboBoxConexiones.gridwidth = 3;
@@ -101,7 +98,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					adminConexiones.nuevaConexion(comboBoxConexiones.getSelectedItem().toString());
+					controlador.nuevaConexion(comboBoxConexiones.getSelectedItem().toString());
 					
 				}
 			});
@@ -121,23 +118,24 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        panelConexion.add(btnDesconectar, gbc_btnDesconectar);
 	        
 	        JButton btnNuevaConexion = new JButton("Nueva Conexion");
+	        JTextField nombre = new JTextField();
+        	JTextField ip = new JTextField();
+        	JTextField id = new JTextField();
+        	Object[] message = {
+        	    "Nombre:", nombre,
+        	    "ip:", ip,
+        	    "id:", id
+        	};
 	        btnNuevaConexion.addActionListener(new ActionListener() {
-	        	JTextField nombre = new JTextField();
-	        	JTextField ip = new JTextField();
-	        	JTextField id = new JTextField();
-	        	Object[] message = {
-	        	    "Nombre:", nombre,
-	        	    "ip:", ip,
-	        	    "id:", id
-	        	};
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					int option = JOptionPane.showConfirmDialog(null, message, "Crear Nueva Conexion", JOptionPane.OK_CANCEL_OPTION);
 		        	if (option == JOptionPane.OK_OPTION) {
 		        		if(!nombre.getText().equals("") || !ip.getText().equals("") || !id.getText().equals("")) {
 		        			if (isValidIP(ip.getText())) {
-			        	        adminConexiones.crearConexion(nombre.getText(), ip.getText(), id.getText());
+			        	        adminConexiones.guardarConexion(nombre.getText(), ip.getText(), id.getText());
 			        	        comboBoxConexiones.addItem(nombre.getText());
+			        	        comboBoxConexiones.setSelectedItem(nombre.getText());
 			        	    } else {
 			        	    	mostrarMensajeError("La IP ingresada no es valida");
 			        	    }
@@ -508,55 +506,121 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         getContentPane().add(panelDatos, gbc_panelDatos); // add component to the ContentPane
         panelDatos.setLayout(new BorderLayout(0, 0));
         
+        table = new JTable();
         table.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane = new JScrollPane(table);
         
         panelDatos.add(scrollPane, BorderLayout.CENTER);
         
 	        JPanel panelBotonesDatos = new JPanel();
 	        panelDatos.add(panelBotonesDatos, BorderLayout.SOUTH);
 	        
-	        JButton btnBorrarLista = new JButton("Borrar Lista");
-	        panelBotonesDatos.add(btnBorrarLista);
-	        
-	        JButton btnExportar = new JButton("Exportar");
-	        btnExportar.addActionListener(new ActionListener() {
-	
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					EscritorExcel.exportar();
-					
-				}
-	        	
-	        });
-	        panelBotonesDatos.add(btnExportar);
+		        JButton btnBorrarLista = new JButton("Borrar Lista");
+		        btnBorrarLista.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.borrarLista();
+						
+					}
+		        	
+		        });
+		        panelBotonesDatos.add(btnBorrarLista);
+		        
+		        JButton btnExportar = new JButton("Exportar");
+		        btnExportar.addActionListener(new ActionListener() {
+		
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.exportar();
+						
+					}
+		        	
+		        });
+		        panelBotonesDatos.add(btnExportar);
         
         /* PANEL GRAFICO */
 	        
-        JPanel panelGrafico = new XChartPanel(ConstructorGrafico.getChart());
-        panelDatos.setBorder(BorderFactory.createTitledBorder(eBorder, "Grafico de consumo"));
-        GridBagConstraints gbc_panelGrafico = new GridBagConstraints();
-        gbc_panelGrafico.fill = GridBagConstraints.BOTH;
-        gbc_panelGrafico.anchor = GridBagConstraints.NORTHWEST;
-        gbc_panelGrafico.gridx = 1;
-        gbc_panelGrafico.gridy = 2;
-        gbc_panelGrafico.gridwidth = 1;
-        gbc_panelGrafico.gridheight = 1;
-        gbc_panelGrafico.weightx = 80;
-        gbc_panelGrafico.weighty = 40;
-        gbc_panelGrafico.insets = new Insets(2, 2, 5, 2);
-        getContentPane().add(panelGrafico, gbc_panelGrafico);
-        
-       
+	    panelContenedorGrafico = new JPanel();
+	    
+	    panelContenedorGrafico.setBorder(BorderFactory.createTitledBorder(eBorder, "Grafico de Consumo"));
+        GridBagConstraints gbc_panelContenedorGrafico = new GridBagConstraints();
+        gbc_panelContenedorGrafico.fill = GridBagConstraints.BOTH;
+        gbc_panelContenedorGrafico.anchor = GridBagConstraints.NORTHWEST;
+        gbc_panelContenedorGrafico.gridx = 1;
+        gbc_panelContenedorGrafico.gridy = 2;
+        gbc_panelContenedorGrafico.gridwidth = 1;
+        gbc_panelContenedorGrafico.gridheight = 1;
+        gbc_panelContenedorGrafico.weightx = 80;
+        gbc_panelContenedorGrafico.weighty = 40;
+        gbc_panelContenedorGrafico.insets = new Insets(2, 2, 5, 2);
+        getContentPane().add(panelContenedorGrafico, gbc_panelContenedorGrafico); // add component to the ContentPane
+        panelContenedorGrafico.setLayout(new BorderLayout(0, 0));
+	        
+	        panelGrafico = new XChartPanel(ConstructorGrafico.getChart());
+	        panelContenedorGrafico.add(panelGrafico, BorderLayout.CENTER);
+	        
+	        JPanel panelBotonesGrafico = new JPanel();
+	        panelContenedorGrafico.add(panelBotonesGrafico, BorderLayout.SOUTH);
+	        
+	        	JButton botonGraficoSemana = new JButton("Semanal");
+	        	botonGraficoSemana.addActionListener(new ActionListener() {
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // important
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.graficarSemana();
+						
+					}
+	        		
+	        	});
+	        	panelBotonesGrafico.add(botonGraficoSemana);
+	        	
+	        	JButton botonGraficoDia = new JButton("Diario");
+	        	botonGraficoDia.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.graficarDia();
+						
+					}
+	        		
+	        	});
+	        	panelBotonesGrafico.add(botonGraficoDia);
+	        	
+	        	JButton botonGraficoHora = new JButton("Ultima hora");
+	        	botonGraficoHora.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.graficarHora();
+						
+					}
+	        		
+	        	});
+	        	panelBotonesGrafico.add(botonGraficoHora);
+        
+    	this.addWindowListener(new WindowAdapter(){
+    	                public void windowClosing(WindowEvent e){
+    	                	int reply = JOptionPane.showConfirmDialog(null, "¿Seguro que desea cerrar la aplicacion?", "Cerrar aplicacion", JOptionPane.YES_NO_OPTION);
+    	                    if (reply == JOptionPane.YES_OPTION) {
+    	                      controlador.cerrarConexion();
+    	                      System.exit(0);
+    	                    }
+    	                        
+    	                }
+    	            });
+
+    	
+	        	
         pack();
         setVisible(true); // important
+        
+        controlador = new Controlador(this, conexionSeleccionada);
+        new Thread(controlador).start();
     }
     
     public static void main(String[] args) {
     	
-    	new Thread(adminConexiones);
         javax.swing.SwingUtilities.invokeLater(new Runnable() { // important
         	
             @Override
@@ -583,10 +647,8 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	
 	@Override
 	public void actualizarDatosTabla(String[][] datos) {
-		tableModel = new DefaultTableModel(datos, adminTabla.getNombresColumnas());
-		table = new JTable(tableModel);
-	    
-		tableModel.setDataVector(datos, adminTabla.getNombresColumnas());
+		tableModel = new DefaultTableModel(datos, AdminTabla.getNombresColumnas());
+		table.setModel(tableModel);
 		
 	}
 
@@ -627,6 +689,17 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	    	lblNivelRele2Grafico.setText("ON");
 	    	lblNivelRele2Grafico.setBackground(Color.GREEN);
 	    }
+	}
+
+	@Override
+	public void actualizarGrafico(XYChart chart) {
+		System.out.println("actualizar grafico");
+		panelContenedorGrafico.remove(panelGrafico);
+		panelGrafico = new XChartPanel(chart);
+		System.out.println(panelGrafico);
+		panelContenedorGrafico.add(panelGrafico, BorderLayout.CENTER);
+		panelContenedorGrafico.validate();
+		panelContenedorGrafico.repaint();
 	}
 	
 	

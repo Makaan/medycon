@@ -31,10 +31,10 @@ public class AlmacenamientoArchivo {
         }
 	}
 	
-	public void guardarEntrada(String conexion) {
+	public void guardarEntrada(String entrada) {
 		try {
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(nombreArchivo, true)));
-			writer.println(conexion);
+			writer.println(entrada);
 			writer.close();
 		}
 		catch(IOException ex) {
@@ -66,6 +66,22 @@ public class AlmacenamientoArchivo {
             System.out.println( "Error al leer el archivo '" + nombreArchivo + "'");                  
         }
 		return conexiones;
+	}
+
+	public void borrarEntradas() {
+		File archivo = new File(nombreArchivo);
+		try {
+			if(archivo.exists()) {
+				PrintWriter writer = new PrintWriter(archivo);
+				writer.print("");
+				writer.close();
+			}
+		}
+		catch(IOException ex) {
+			System.out.println( "Error al leer el archivo '" + nombreArchivo + "'");                  
+	    }
+		
+		
 	}
 
 }

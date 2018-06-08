@@ -1,28 +1,18 @@
-package interfaz;
+package controlador;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import interfaz.InfoGUI;
+
 public class AdminInfo {
 	
-	private static AdminInfo instancia = null;
 	private InfoGUI interfaz;
 	
-	private AdminInfo() {
-		
-	}
-	
-	public static AdminInfo getInstancia() {
-		if(instancia == null) {
-			instancia = new AdminInfo();
-		}
-		return instancia;
-	}
-	
-	public void setInterfaz(InfoGUI interfaz) {
+	public AdminInfo(InfoGUI interfaz) {
 		this.interfaz = interfaz;
 	}
-	
+
 	public void actualizarDatos(String rawData) {
 		String[] tokens = rawData.substring(1, rawData.length()-2).split(",");
 		Map<String, String> mapeoDatos = new HashMap<String, String>();

@@ -21,39 +21,36 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 public class ConstructorGrafico {
 	
 	public static XYChart getChart() {
-		 
+		return new XYChartBuilder().width(800).height(600).title("Valores promedios ultima Hora").xAxisTitle("Fecha").yAxisTitle("Altura").build();
+	}
+	
+	public static XYChart getChart(ArrayList<Date> xData, ArrayList<Integer> yData, String title) {
+		
+		for(Integer i: yData) {
+			System.out.println(i);
+		}
 		// Create Chart
-	    XYChart chart = new XYChartBuilder().width(800).height(600).title("Valores promedios ultima Hora").xAxisTitle("Fecha").yAxisTitle("Promedio").build();
+	    XYChart chart = new XYChartBuilder().width(800).height(600).title(title).xAxisTitle("Fecha").yAxisTitle("Promedio").build();
 	 
 	    // Customize Chart
 	    setEstilo(chart);
 	 
-	    // generates linear data
-	    ArrayList<Date> xData = new ArrayList<Date>();
-	    ArrayList<Double> yData = new ArrayList<Double>();
-	 
-	    DateFormat sdf = new SimpleDateFormat("h:mm a");
-	    Date date = null;
-	    for (int i = 1; i <= 10; i++) {
-	    	try {
-	    		date = sdf.parse("00:"+i+" PM");
-		    } catch (ParseException e) {
-		      e.printStackTrace();
-		    }
-			    xData.add(date);
-			    yData.add(Math.random() * i);
-	    }
-	 
 	    // Series
 	    XYSeries series = chart.addSeries("Altura", xData, yData);
-	    series.setLineColor(XChartSeriesColors.BLUE);
-	    series.setMarkerColor(Color.ORANGE);
-	    series.setMarker(SeriesMarkers.CIRCLE);
-	    series.setLineStyle(SeriesLines.SOLID);
+	    setEstiloSerie(series);
+	    
 	 
 	    return chart;
     }
 	
+	private static void setEstiloSerie(XYSeries series) {
+	    series.setLineColor(XChartSeriesColors.BLUE);
+	    series.setMarkerColor(Color.BLUE);
+	    series.setMarker(SeriesMarkers.CIRCLE);
+	    series.setLineStyle(SeriesLines.SOLID);
+		
+	}
+
 	private static void setEstilo(XYChart chart) {
 		
 		chart.getStyler().setPlotBackgroundColor(ChartColor.getAWTColor(ChartColor.GREY));
@@ -62,13 +59,9 @@ public class ConstructorGrafico {
 	    chart.getStyler().setChartTitleBoxVisible(true);
 	    chart.getStyler().setChartTitleBoxBorderColor(Color.BLACK);
 	    chart.getStyler().setPlotGridLinesVisible(false);
-	 
 	    chart.getStyler().setAxisTickPadding(20);
-	 
 	    chart.getStyler().setAxisTickMarkLength(15);
-	 
 	    chart.getStyler().setPlotMargin(20);
-	 
 	    chart.getStyler().setChartTitleFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
 	    chart.getStyler().setLegendFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
 	    chart.getStyler().setLegendPosition(LegendPosition.InsideSE);
@@ -76,7 +69,6 @@ public class ConstructorGrafico {
 	    chart.getStyler().setAxisTitleFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
 	    chart.getStyler().setAxisTickLabelsFont(new Font(Font.SERIF, Font.PLAIN, 11));
 	    chart.getStyler().setDatePattern("h:mm a");
-	    chart.getStyler().setDecimalPattern("%#0.");
 		
 	}
 }

@@ -24,11 +24,11 @@ public class Conexion {
 		this.id = id;
 
 		socket = new Socket(ip, PUERTO);
-        System.out.println("conctando");
+        System.out.println("conectando");
         	
         writer = new PrintWriter(socket.getOutputStream(), true);
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		
+		System.out.println("conectado");
 	}
 	
 	public String consultarEstado() throws IOException {

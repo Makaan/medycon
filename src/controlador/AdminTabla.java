@@ -1,4 +1,4 @@
-package interfaz;
+package controlador;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -6,53 +6,43 @@ import java.util.Date;
 import java.util.List;
 
 import almacenamiento.AlmacenamientoArchivo;
+import interfaz.TablaGUI;
 
 public class AdminTabla {
 	
-	private static AdminTabla instancia = null;
 	
-	private final String NOMBRE_ARCHIVO = "datosTabla.txt";
-	private final SimpleDateFormat formateador = new SimpleDateFormat("dd-MMM-yyyy/HH:mm:ss"); 
+	private String identificador;
+	public static final SimpleDateFormat formateador = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"); 
 	
 	private AlmacenamientoArchivo almacenamientoArchivo;
 	private TablaGUI<String> interfaz = null;
-	private String[] columnas = {
+	private static final String[] columnas = {
     		"FECHA",
             "PORCENTAJE",
             "DISTANCIA",
             "BOMBA 1",
             "BOMBA 2"};
 	
-	private AdminTabla() {
-		almacenamientoArchivo = new AlmacenamientoArchivo(NOMBRE_ARCHIVO);
-		
-	}
-	
-	public static AdminTabla getInstancia() {
-		if(instancia == null) {
-			instancia = new AdminTabla();
-		}
-		return instancia;
-	}
-	
-	public void setInterfaz(TablaGUI<String> interfaz) {
-		this.interfaz = interfaz;
+	public AdminTabla(TablaGUI<String> interfaz, String identificador) {
+		this.interfaz = interfaz; 
+		almacenamientoArchivo = new AlmacenamientoArchivo(identificador+"Tabla");
 		List<String> entradas = almacenamientoArchivo.getEntradas();
 		String[][] filasPrevias = new String[entradas.size()][columnas.length];
 		int i = 0;
 		for(String entrada: entradas) {
 			String[] tokens = entrada.split(",");
-			System.out.println(tokens.length);
 			for(int j = 0; j < tokens.length; j++ ) {
-				System.out.println(i+" "+j+" "+tokens[j]);
 				filasPrevias[i][j] = tokens[j];
 			}
 			i++;
 		}
 		interfaz.actualizarDatosTabla(filasPrevias);	
+		
+		this.identificador = identificador;
+		
 	}
 	
-	public String[] getNombresColumnas() {
+	public static String[] getNombresColumnas() {
 		return columnas;
 	}
 	
@@ -89,7 +79,7 @@ public class AdminTabla {
 		
 		String fila = String.join(",", filaArr);
 		
-		
+		System.out.println(fila);
 		almacenamientoArchivo.guardarEntrada(fila);
 		interfaz.aggregarDatoTabla(filaArr);
 	}
@@ -102,6 +92,12 @@ public class AdminTabla {
 	
 	public List<String> getDatosTabla() {
 		return almacenamientoArchivo.getEntradas();
+	}
+
+	public void borrarLista() {
+		almacenamientoArchivo.borrarEntradas();
+		interfaz.actualizarDatosTabla(new String[0][0]);
+		
 	}
 	
 }

@@ -1,4 +1,6 @@
-package interfaz;
+package controlador;
+
+import interfaz.MensajesGUI;
 
 public class AdminMensajes {
 	

@@ -1,10 +1,5 @@
 package almacenamiento;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,19 +9,11 @@ public class AlmacenamientoConexiones {
 	
 
 	private final String NOMBRE_ARCHIVO = "conexiones.txt";
-	private static AlmacenamientoConexiones instancia;
 	private AlmacenamientoArchivo almacenamientoArchivo;
 	
-	private AlmacenamientoConexiones() {
+	public AlmacenamientoConexiones() {
 		almacenamientoArchivo = new AlmacenamientoArchivo(NOMBRE_ARCHIVO);
     }
-	
-	public static AlmacenamientoConexiones getInstancia() {
-		if(instancia == null) {
-			instancia = new AlmacenamientoConexiones();
-		}
-		return instancia;
-	}
 	
 	public void guardarConexion(String nombre, String ip, String id) {
 		Map<String, Vector<String>> mapeoConexiones = getConexiones();

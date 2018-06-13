@@ -83,55 +83,56 @@ public class AdminGrafico {
 			for(String dato: datosTabla) {
 				String[] tokens = dato.split(",");
 				Date fecha = formateador.parse(tokens[0]);
-				fechaC.setTime(fecha);
+				fechaC.setTime(fecha);	
+				int altura = Integer.parseInt(tokens[1]);
 				//Comparo con -60 minutos para quedarme con los datos que estan dentro de la ultima hora
 				//Despues con el resto en intervalos de 5 minutos
 				if(tiempoM60.compareTo(fechaC) <= 0) {
 					if(tiempoM55.compareTo(fechaC) >= 0) {
-						mapeoPromedios.get(tiempoM55.getTime()).add(Integer.parseInt(tokens[2]));
+						mapeoPromedios.get(tiempoM55.getTime()).add(altura);
 					}
 					else {
 						if(tiempoM50.compareTo(fechaC) >= 0) {
-							mapeoPromedios.get(tiempoM50.getTime()).add(Integer.parseInt(tokens[2]));
+							mapeoPromedios.get(tiempoM50.getTime()).add(altura);
 						}
 						else {
 							if(tiempoM45.compareTo(fechaC) >= 0) {
-								mapeoPromedios.get(tiempoM45.getTime()).add(Integer.parseInt(tokens[2]));
+								mapeoPromedios.get(tiempoM45.getTime()).add(altura);
 							}
 							else {
 								if(tiempoM40.compareTo(fechaC) >= 0) {
-									mapeoPromedios.get(tiempoM40.getTime()).add(Integer.parseInt(tokens[2]));
+									mapeoPromedios.get(tiempoM40.getTime()).add(altura);
 								}
 									else {
 										if(tiempoM35.compareTo(fechaC) >= 0) {
-											mapeoPromedios.get(tiempoM35.getTime()).add(Integer.parseInt(tokens[2]));
+											mapeoPromedios.get(tiempoM35.getTime()).add(altura);
 										}
 										else {
 											if(tiempoM30.compareTo(fechaC) >= 0) {
-												mapeoPromedios.get(tiempoM30.getTime()).add(Integer.parseInt(tokens[2]));
+												mapeoPromedios.get(tiempoM30.getTime()).add(altura);
 											}
 											else {
 												if(tiempoM25.compareTo(fechaC) >= 0) {
-													mapeoPromedios.get(tiempoM25.getTime()).add(Integer.parseInt(tokens[2]));
+													mapeoPromedios.get(tiempoM25.getTime()).add(altura);
 												}
 												else {
 													if(tiempoM20.compareTo(fechaC) >= 0) {
-														mapeoPromedios.get(tiempoM20.getTime()).add(Integer.parseInt(tokens[2]));
+														mapeoPromedios.get(tiempoM20.getTime()).add(altura);
 													}
 													else {
 														if(tiempoM15.compareTo(fechaC) >= 0) {
-															mapeoPromedios.get(tiempoM15.getTime()).add(Integer.parseInt(tokens[2]));
+															mapeoPromedios.get(tiempoM15.getTime()).add(altura);
 														}
 														else {
 															if(tiempoM10.compareTo(fechaC) >= 0) {
-																mapeoPromedios.get(tiempoM10.getTime()).add(Integer.parseInt(tokens[2]));
+																mapeoPromedios.get(tiempoM10.getTime()).add(altura);
 															}
 															else {
 																if(tiempoM5.compareTo(fechaC) >= 0) {
-																	mapeoPromedios.get(tiempoM5.getTime()).add(Integer.parseInt(tokens[2]));
+																	mapeoPromedios.get(tiempoM5.getTime()).add(altura);
 																}
 																else {
-																	mapeoPromedios.get(tiempo.getTime()).add(Integer.parseInt(tokens[2]));
+																	mapeoPromedios.get(tiempo.getTime()).add(altura);
 																}
 															}
 														}
@@ -282,103 +283,103 @@ public class AdminGrafico {
 						String[] tokens = dato.split(",");
 						Date fecha = formateador.parse(tokens[0]);
 						fechaC.setTime(fecha);
+						int altura = Integer.parseInt(tokens[1]);
 						//Comparo con -24 horas para quedarme con los datos que estan dentro de la ultima hora
 						//Despues con el resto en intervalos de 1 hora
 						if(tiempoM24.compareTo(fechaC) <= 0) {
 							if(tiempoM23.compareTo(fechaC) >= 0) {
-								mapeoPromedios.get(tiempoM23.getTime()).add(Integer.parseInt(tokens[2]));
+								mapeoPromedios.get(tiempoM23.getTime()).add(altura);
 							}
 							else {
 								if(tiempoM22.compareTo(fechaC) >= 0) {
-									mapeoPromedios.get(tiempoM22.getTime()).add(Integer.parseInt(tokens[2]));
+									mapeoPromedios.get(tiempoM22.getTime()).add(altura);
 								}
 								else {
 									if(tiempoM21.compareTo(fechaC) >= 0) {
-										mapeoPromedios.get(tiempoM21.getTime()).add(Integer.parseInt(tokens[2]));
+										mapeoPromedios.get(tiempoM21.getTime()).add(altura);
 									}
 									else {
 										if(tiempoM20.compareTo(fechaC) >= 0) {
-											mapeoPromedios.get(tiempoM20.getTime()).add(Integer.parseInt(tokens[2]));
+											mapeoPromedios.get(tiempoM20.getTime()).add(altura);
 										}
+										else {
+											if(tiempoM19.compareTo(fechaC) >= 0) {
+												mapeoPromedios.get(tiempoM19.getTime()).add(altura);
+											}
 											else {
-												if(tiempoM19.compareTo(fechaC) >= 0) {
-													mapeoPromedios.get(tiempoM19.getTime()).add(Integer.parseInt(tokens[2]));
+												if(tiempoM18.compareTo(fechaC) >= 0) {
+													mapeoPromedios.get(tiempoM18.getTime()).add(altura);
 												}
 												else {
-													if(tiempoM18.compareTo(fechaC) >= 0) {
-														mapeoPromedios.get(tiempoM18.getTime()).add(Integer.parseInt(tokens[2]));
+													if(tiempoM17.compareTo(fechaC) >= 0) {
+														mapeoPromedios.get(tiempoM17.getTime()).add(altura);
 													}
 													else {
-														if(tiempoM17.compareTo(fechaC) >= 0) {
-															mapeoPromedios.get(tiempoM17.getTime()).add(Integer.parseInt(tokens[2]));
+														if(tiempoM16.compareTo(fechaC) >= 0) {
+															mapeoPromedios.get(tiempoM16.getTime()).add(altura);
 														}
 														else {
-															if(tiempoM16.compareTo(fechaC) >= 0) {
-																mapeoPromedios.get(tiempoM16.getTime()).add(Integer.parseInt(tokens[2]));
+															if(tiempoM15.compareTo(fechaC) >= 0) {
+																mapeoPromedios.get(tiempoM15.getTime()).add(altura);
 															}
 															else {
-																if(tiempoM15.compareTo(fechaC) >= 0) {
-																	mapeoPromedios.get(tiempoM15.getTime()).add(Integer.parseInt(tokens[2]));
+																if(tiempoM14.compareTo(fechaC) >= 0) {
+																	mapeoPromedios.get(tiempoM14.getTime()).add(altura);
 																}
 																else {
-																	if(tiempoM14.compareTo(fechaC) >= 0) {
-																		mapeoPromedios.get(tiempoM14.getTime()).add(Integer.parseInt(tokens[2]));
+																	if(tiempoM13.compareTo(fechaC) >= 0) {
+																		mapeoPromedios.get(tiempoM13.getTime()).add(altura);
 																	}
 																	else {
-																		if(tiempoM13.compareTo(fechaC) >= 0) {
-																			mapeoPromedios.get(tiempoM13.getTime()).add(Integer.parseInt(tokens[2]));
+																		if(tiempoM12.compareTo(fechaC) >= 0) {
+																			mapeoPromedios.get(tiempoM12.getTime()).add(altura);
 																		}
 																		else {
-																			if(tiempoM12.compareTo(fechaC) >= 0) {
-																				mapeoPromedios.get(tiempoM12.getTime()).add(Integer.parseInt(tokens[2]));
+																			if(tiempoM11.compareTo(fechaC) >= 0) {
+																				mapeoPromedios.get(tiempoM11.getTime()).add(altura);
 																			}
 																			else {
-																				if(tiempoM11.compareTo(fechaC) >= 0) {
-																					mapeoPromedios.get(tiempoM11.getTime()).add(Integer.parseInt(tokens[2]));
+																				if(tiempoM10.compareTo(fechaC) >= 0) {
+																					mapeoPromedios.get(tiempoM10.getTime()).add(altura);
 																				}
 																				else {
-																					if(tiempoM10.compareTo(fechaC) >= 0) {
-																						mapeoPromedios.get(tiempoM10.getTime()).add(Integer.parseInt(tokens[2]));
+																					if(tiempoM9.compareTo(fechaC) >= 0) {
+																						mapeoPromedios.get(tiempoM9.getTime()).add(altura);
 																					}
 																					else {
-																						if(tiempoM9.compareTo(fechaC) >= 0) {
-																							mapeoPromedios.get(tiempoM9.getTime()).add(Integer.parseInt(tokens[2]));
+																						if(tiempoM8.compareTo(fechaC) >= 0) {
+																							mapeoPromedios.get(tiempoM8.getTime()).add(altura);
 																						}
 																						else {
-																							if(tiempoM8.compareTo(fechaC) >= 0) {
-																								mapeoPromedios.get(tiempoM8.getTime()).add(Integer.parseInt(tokens[2]));
+																							if(tiempoM7.compareTo(fechaC) >= 0) {
+																								mapeoPromedios.get(tiempoM7.getTime()).add(altura);
 																							}
 																							else {
-																								if(tiempoM7.compareTo(fechaC) >= 0) {
-																									mapeoPromedios.get(tiempoM7.getTime()).add(Integer.parseInt(tokens[2]));
+																								if(tiempoM6.compareTo(fechaC) >= 0) {
+																									mapeoPromedios.get(tiempoM6.getTime()).add(altura);
 																								}
 																								else {
-																									if(tiempoM6.compareTo(fechaC) >= 0) {
-																										mapeoPromedios.get(tiempoM6.getTime()).add(Integer.parseInt(tokens[2]));
+																									if(tiempoM5.compareTo(fechaC) >= 0) {
+																										mapeoPromedios.get(tiempoM5.getTime()).add(altura);
 																									}
 																									else {
-																										if(tiempoM5.compareTo(fechaC) >= 0) {
-																											mapeoPromedios.get(tiempoM5.getTime()).add(Integer.parseInt(tokens[2]));
+																										if(tiempoM4.compareTo(fechaC) >= 0) {
+																											mapeoPromedios.get(tiempoM4.getTime()).add(altura);
 																										}
 																										else {
-																											if(tiempoM4.compareTo(fechaC) >= 0) {
-																												mapeoPromedios.get(tiempoM4.getTime()).add(Integer.parseInt(tokens[2]));
+																											if(tiempoM3.compareTo(fechaC) >= 0) {
+																												mapeoPromedios.get(tiempoM3.getTime()).add(altura);
 																											}
 																											else {
-																												if(tiempoM3.compareTo(fechaC) >= 0) {
-																													mapeoPromedios.get(tiempoM3.getTime()).add(Integer.parseInt(tokens[2]));
+																												if(tiempoM2.compareTo(fechaC) >= 0) {
+																													mapeoPromedios.get(tiempoM2.getTime()).add(altura);
 																												}
 																												else {
-																													if(tiempoM2.compareTo(fechaC) >= 0) {
-																														mapeoPromedios.get(tiempoM2.getTime()).add(Integer.parseInt(tokens[2]));
+																													if(tiempoM1.compareTo(fechaC) >= 0) {
+																														mapeoPromedios.get(tiempoM1.getTime()).add(altura);
 																													}
 																													else {
-																														if(tiempoM1.compareTo(fechaC) >= 0) {
-																															mapeoPromedios.get(tiempoM1.getTime()).add(Integer.parseInt(tokens[2]));
-																														}
-																														else {
-																															mapeoPromedios.get(tiempo.getTime()).add(Integer.parseInt(tokens[2]));
-																														}
+																														mapeoPromedios.get(tiempo.getTime()).add(altura);
 																													}
 																												}
 																											}
@@ -402,6 +403,7 @@ public class AdminGrafico {
 									}
 								}
 							}
+						}
 					}	
 					
 					ArrayList<Date> fechasGrafico = new ArrayList<Date>();
@@ -470,34 +472,35 @@ public class AdminGrafico {
 						String[] tokens = dato.split(",");
 						Date fecha = formateador.parse(tokens[0]);
 						fechaC.setTime(fecha);
+						int altura = Integer.parseInt(tokens[1]);
 						//Comparo con -7 dias para quedarme con los datos que estan dentro de la ultima hora
 						//Despues con el resto en intervalos de 1 dia
 						if(tiempoM7.compareTo(fechaC) <= 0) {
 							if(tiempoM6.compareTo(fechaC) >= 0) {
-								mapeoPromedios.get(tiempoM6.getTime()).add(Integer.parseInt(tokens[2]));
+								mapeoPromedios.get(tiempoM6.getTime()).add(altura);
 							}
 							else {
 								if(tiempoM5.compareTo(fechaC) >= 0) {
-									mapeoPromedios.get(tiempoM5.getTime()).add(Integer.parseInt(tokens[2]));
+									mapeoPromedios.get(tiempoM5.getTime()).add(altura);
 								}
 								else {
 									if(tiempoM4.compareTo(fechaC) >= 0) {
-										mapeoPromedios.get(tiempoM4.getTime()).add(Integer.parseInt(tokens[2]));
+										mapeoPromedios.get(tiempoM4.getTime()).add(altura);
 									}
 									else {
 										if(tiempoM3.compareTo(fechaC) >= 0) {
-											mapeoPromedios.get(tiempoM3.getTime()).add(Integer.parseInt(tokens[2]));
+											mapeoPromedios.get(tiempoM3.getTime()).add(altura);
 										}
 										else {
 											if(tiempoM2.compareTo(fechaC) >= 0) {
-												mapeoPromedios.get(tiempoM2.getTime()).add(Integer.parseInt(tokens[2]));
+												mapeoPromedios.get(tiempoM2.getTime()).add(altura);
 											}
 											else {
 												if(tiempoM1.compareTo(fechaC) >= 0) {
-													mapeoPromedios.get(tiempoM1.getTime()).add(Integer.parseInt(tokens[2]));
+													mapeoPromedios.get(tiempoM1.getTime()).add(altura);
 												}
 												else {
-													mapeoPromedios.get(tiempo.getTime()).add(Integer.parseInt(tokens[2]));
+													mapeoPromedios.get(tiempo.getTime()).add(altura);
 												}
 											}
 										}

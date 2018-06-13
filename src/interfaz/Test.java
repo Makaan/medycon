@@ -18,10 +18,10 @@ public class Test {
 		for(int i = 0; i < max; i++) {
 			String aGuardar = new String();
 			cal.add(Calendar.MINUTE, 1);
-			aGuardar+= formateador.format(cal.getTime());
-			aGuardar+=",0,";
-			aGuardar+=Integer.toString(rand.nextInt(100));
-			aGuardar+=",off,off";
+			aGuardar += formateador.format(cal.getTime());
+			aGuardar += ",";
+			aGuardar += Integer.toString(rand.nextInt(100));
+			aGuardar += ",0,off,off";
 			aa.guardarEntrada(aGuardar);
 		}
 	}

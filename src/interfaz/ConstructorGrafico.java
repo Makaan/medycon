@@ -21,7 +21,7 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 public class ConstructorGrafico {
 	
 	public static XYChart getChart() {
-		return new XYChartBuilder().width(800).height(600).title("Valores promedios ultima Hora").xAxisTitle("Fecha").yAxisTitle("Altura").build();
+		return new XYChartBuilder().width(800).height(600).xAxisTitle("Fecha").yAxisTitle("Altura").build();
 	}
 	
 	public static XYChart getChart(ArrayList<Date> xData, ArrayList<Integer> yData, String title) {
@@ -30,7 +30,7 @@ public class ConstructorGrafico {
 			System.out.println(i);
 		}
 		// Create Chart
-	    XYChart chart = new XYChartBuilder().width(800).height(600).title(title).xAxisTitle("Fecha").yAxisTitle("Promedio").build();
+	    XYChart chart = new XYChartBuilder().width(800).height(600).title(title).xAxisTitle("Fecha").yAxisTitle("Altura").build();
 	 
 	    // Customize Chart
 	    setEstilo(chart);

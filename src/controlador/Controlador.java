@@ -3,6 +3,7 @@ package controlador;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import almacenamiento.AlmacenamientoConexiones;
 import almacenamiento.EscritorExcel;
@@ -15,7 +16,7 @@ import interfaz.Interfaz;
 
 public class Controlador implements Runnable {
 	
-	private final int RETARDO = 1000; //Retardo entre peticiones al servidor en milisegundos
+	private final int RETARDO = 30000; //Retardo entre peticiones al servidor en milisegundos
 	private Interfaz interfaz;
 	
 	//private static AdminTabla adminTabla = AdminTabla.getInstancia();
@@ -29,6 +30,8 @@ public class Controlador implements Runnable {
 	private Conexion conexion;
 	private String nombreConexion;
 	
+	private AtomicBoolean hayConexion;
+	
 	public Controlador(Interfaz interfaz, String nombreConexion) {
 		this.interfaz = interfaz;
 		
@@ -36,43 +39,44 @@ public class Controlador implements Runnable {
 		adminInfo = new AdminInfo(interfaz);
 		adminGrafico = new AdminGrafico(interfaz);
 		
+		hayConexion = new AtomicBoolean(false);
 	}
 
 	@Override
 	public void run() {
-		while(true) {
-			System.out.println(conexion != null);
-			if(conexion != null) {
-				System.out.println(conexion != null);
-				try {
-					String resu = conexion.consultarEstado();
-					System.out.println(resu);
-					if(!resu.equals("")) {
-						adminTabla.agregarFila(resu);
-						adminInfo.actualizarDatos(resu);
-					}
-					Thread.sleep(RETARDO);
-		 		}
-				catch (InterruptedException e) {
-					adminMensajes.mostrarMensajeError("Error en el hilo de ejecucion");
-					e.printStackTrace();
-				}catch (IOException e) {
-					adminMensajes.mostrarMensajeError("Error de entrada/salida");
-					e.printStackTrace();
+		try {
+			while(true) {
+				if(hayConexion.get()) {
+						String resu = conexion.consultarEstado();
+						System.out.println("\""+resu+"\"");
+						if(!resu.equals("")) {
+							adminTabla.agregarFila(resu);
+							adminInfo.actualizarDatos(resu);
+						}
+						Thread.sleep(RETARDO);
 				}
 			}
 		}
+		catch (InterruptedException e) {
+			adminMensajes.mostrarMensajeError("Error en el hilo de ejecucion");
+			e.printStackTrace();
+		}catch (IOException e) {
+			adminMensajes.mostrarMensajeError("Error de entrada/salida");
+			e.printStackTrace();
+		}	
 	}
 	
 	public void cerrarConexion() {
-		if(conexion != null) {
+		if(hayConexion.get()) {
 			try {
 				conexion.cerrarConexion();
+				hayConexion.set(false);
+				conexion = null;
 			} catch (IOException e) {
 				adminMensajes.mostrarMensajeError("Error al cerrar la conexion");
 				e.printStackTrace();
 			}
-			conexion = null;
+			
 		}
 		
 	}
@@ -85,7 +89,7 @@ public class Controlador implements Runnable {
 			}
 			Vector<String> datosConexion = adminConexiones.getConexion(nombreConexion);
 			conexion = new Conexion(datosConexion.get(0), datosConexion.get(1));
-			System.out.println("Creada conexion "+(conexion != null));
+			hayConexion.set(true);
 			adminTabla = new AdminTabla(interfaz, nombreConexion);
 		}
 		catch (IOException e) {

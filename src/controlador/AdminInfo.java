@@ -36,13 +36,15 @@ public class AdminInfo {
 		int nivelMedio = Integer.parseInt(nivelMedioRaw);
 		int altura = nivelMedio - distancia;
 		
+		mapeoDatos.put("Altura", Integer.toString(altura));
+		
 		String NMs = tokens[8].substring(2).replaceAll("\\s", "");
 		int NM = Integer.parseInt(NMs);
 		
 		double porcentaje = (((double) altura) / (nivelMedio - NM)) * 100;
 		String sPorcentaje = String.format("%.00f", porcentaje);
 		
-		mapeoDatos.put("porcentaje", sPorcentaje);
+		mapeoDatos.put("Porcentaje", sPorcentaje);
 		
 		interfaz.actualizarInfo(mapeoDatos);
 

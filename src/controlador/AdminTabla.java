@@ -79,7 +79,6 @@ public class AdminTabla {
 		
 		String fila = String.join(",", filaArr);
 		
-		System.out.println(fila);
 		almacenamientoArchivo.guardarEntrada(fila);
 		interfaz.aggregarDatoTabla(filaArr);
 	}

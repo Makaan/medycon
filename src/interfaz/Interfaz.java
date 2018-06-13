@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,12 +44,17 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     private JTextField textFieldNivelRele2Min;
     private JLabel lblNivelRele1Grafico;
     private JLabel lblNivelRele2Grafico;
-    private JTextArea textAreaAbsolutoGrafico;
+    private JLabel lblNivel;
+    private JComboBox<String> comboBoxTipoNivel;
+    private JProgressBar progressBarAbsolutoGrafico;
+    
     private JPanel panelGrafico;
     private JScrollPane scrollPane;
     JPanel panelContenedorGrafico;
     
     private String conexionSeleccionada;
+    
+    Map<String, String> mapeoNiveles;
 
     public Interfaz() {
     	
@@ -55,7 +62,10 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     	
     	AdminMensajes.getInstancia().setInterfaz(this);
     	
+    	mapeoNiveles = new LinkedHashMap<String,String>();
     	
+    	mapeoNiveles.put("Porcentaje", "% 0");
+    	mapeoNiveles.put("Altura", "0 cm");
     	
     	
     	
@@ -110,6 +120,14 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        panelConexion.add(btnConectar, gbc_btnConectar);
         
 	        JButton btnDesconectar = new JButton("Desconectar");
+	        btnDesconectar.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					controlador.cerrarConexion();
+				}
+	        	
+	        });
 	        GridBagConstraints gbc_btnDesconectar = new GridBagConstraints();
 	        gbc_btnDesconectar.fill = GridBagConstraints.BOTH;
 	        gbc_btnDesconectar.insets = new Insets(0, 0, 5, 5);
@@ -192,9 +210,28 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 		        gbc_lblTipoDeNivel.gridy = 0;
 		        panelTipoNivel.add(lblTipoDeNivel, gbc_lblTipoDeNivel);
 		        
-		    	String[] valores = {"Porcentaje (%)","Centimetros (cm)"};
-		        JComboBox<String> comboBoxTipoNivel = new JComboBox<String>(valores);
+		        lblNivel = new JLabel("0 %");
+		        GridBagConstraints gbc_lblNivel = new GridBagConstraints();
+		        gbc_lblNivel.insets = new Insets(0, 0, 5, 5);
+		        gbc_lblNivel.gridx = 0;
+		        gbc_lblNivel.gridy = 2;
+		        panelTipoNivel.add(lblNivel, gbc_lblNivel);
+		        
+		        comboBoxTipoNivel = new JComboBox<String>();
+		        for(String valor: mapeoNiveles.keySet()) {
+		        	comboBoxTipoNivel.addItem(valor);
+		        }
 		        comboBoxTipoNivel.setSelectedItem(0);
+		        comboBoxTipoNivel.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						String valor = mapeoNiveles.get(comboBoxTipoNivel.getSelectedItem());
+						lblNivel.setText(valor);
+						
+					}
+		        	
+		        });
 		        GridBagConstraints gbc_comboBoxTipoNivel = new GridBagConstraints();
 		        gbc_comboBoxTipoNivel.insets = new Insets(0, 0, 5, 5);
 		        gbc_comboBoxTipoNivel.fill = GridBagConstraints.HORIZONTAL;
@@ -202,12 +239,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 		        gbc_comboBoxTipoNivel.gridy = 1;
 		        panelTipoNivel.add(comboBoxTipoNivel, gbc_comboBoxTipoNivel);
 		      
-		        JLabel lblNivel = new JLabel("0 %");
-		        GridBagConstraints gbc_lblNivel = new GridBagConstraints();
-		        gbc_lblNivel.insets = new Insets(0, 0, 5, 5);
-		        gbc_lblNivel.gridx = 0;
-		        gbc_lblNivel.gridy = 2;
-		        panelTipoNivel.add(lblNivel, gbc_lblNivel);
 		        
 	        /* SUB PANEL NIVEL ABSOLUTO */    
 		        
@@ -261,19 +292,17 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 		        gbc_textFieldNivelAbsolutoMin.fill = GridBagConstraints.HORIZONTAL;
 		        panelNivelAbsoluto.add(textFieldNivelAbsolutoMin, gbc_textFieldNivelAbsolutoMin);
 		        
-		        textAreaAbsolutoGrafico = new JTextArea("----\n---\n---\n---\n---\n---\n---\n---\n---\n---\n----");
-		        textAreaAbsolutoGrafico.setRows(10);
-		        textAreaAbsolutoGrafico.setEditable(false);
-		        textAreaAbsolutoGrafico.setBackground(Color.LIGHT_GRAY);
-		        textAreaAbsolutoGrafico.setBorder(BorderFactory.createLineBorder(Color.black));
-		        GridBagConstraints gbc_lblNivelAbsolutoGrafico = new GridBagConstraints();
-		        gbc_lblNivelAbsolutoGrafico.insets = new Insets(0,10,0,10);
-		        gbc_lblNivelAbsolutoGrafico.gridx = 1;
-		        gbc_lblNivelAbsolutoGrafico.gridy = 1;
-		        gbc_lblNivelAbsolutoGrafico.gridheight = 6;
-		        gbc_lblNivelAbsolutoGrafico.weightx = 60;
-		        gbc_lblNivelAbsolutoGrafico.fill = GridBagConstraints.BOTH;
-		        panelNivelAbsoluto.add(textAreaAbsolutoGrafico, gbc_lblNivelAbsolutoGrafico);
+		        progressBarAbsolutoGrafico = new JProgressBar(JProgressBar.VERTICAL);
+		        progressBarAbsolutoGrafico.setForeground(COLOR_AGUA);
+		        progressBarAbsolutoGrafico.setBackground(Color.LIGHT_GRAY);
+		        GridBagConstraints gbc_progressBarAbsolutoGrafico = new GridBagConstraints();
+		        gbc_progressBarAbsolutoGrafico.insets = new Insets(0,10,0,10);
+		        gbc_progressBarAbsolutoGrafico.gridx = 1;
+		        gbc_progressBarAbsolutoGrafico.gridy = 1;
+		        gbc_progressBarAbsolutoGrafico.gridheight = 6;
+		        gbc_progressBarAbsolutoGrafico.weightx = 60;
+		        gbc_progressBarAbsolutoGrafico.fill = GridBagConstraints.BOTH;
+		        panelNivelAbsoluto.add(progressBarAbsolutoGrafico, gbc_progressBarAbsolutoGrafico);
 		        
 		        /* SUB PANEL NIVEL ABSOLUTO - REFERENCIAS */
 		        
@@ -557,7 +586,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         getContentPane().add(panelContenedorGrafico, gbc_panelContenedorGrafico); // add component to the ContentPane
         panelContenedorGrafico.setLayout(new BorderLayout(0, 0));
 	        
-	        panelGrafico = new XChartPanel(ConstructorGrafico.getChart());
+	        panelGrafico = new JPanel();
 	        panelContenedorGrafico.add(panelGrafico, BorderLayout.CENTER);
 	        
 	        JPanel panelBotonesGrafico = new JPanel();
@@ -663,7 +692,24 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 		
 		textFieldNivelAbsolutoMax.setText(datos.get("NivelAbsolutoMax"));
 	    textFieldNivelAbsolutoMin.setText(datos.get("NivelAbsolutoMin"));
-	    //textAreaAbsolutoGrafico.bac
+	    
+	    int nivelAbsolutoMin = Integer.parseInt(datos.get("NivelAbsolutoMin"));
+	    int altura = Integer.parseInt(datos.get("Altura"));
+	    
+	    progressBarAbsolutoGrafico.setMaximum(nivelAbsolutoMin);
+	    progressBarAbsolutoGrafico.setValue(altura);
+	    
+	    if(altura > nivelAbsolutoMin) {
+	    	progressBarAbsolutoGrafico.setForeground(Color.red);
+	    }
+	    else {
+	    	progressBarAbsolutoGrafico.setForeground(COLOR_AGUA);
+	    }
+	    
+	    mapeoNiveles.put("Porcentaje", "% "+datos.get("Porcentaje"));
+	    mapeoNiveles.put("Altura", datos.get("Altura")+" cm");
+	    
+	    lblNivel.setText(mapeoNiveles.get(comboBoxTipoNivel.getSelectedItem()));
 	    
 	    
 	    textFieldNivelRele1Max.setText(datos.get("Rele1Max"));

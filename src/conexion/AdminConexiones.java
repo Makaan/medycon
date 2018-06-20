@@ -1,19 +1,13 @@
 package conexion;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Vector;
-
 import almacenamiento.AlmacenamientoConexiones;
-import controlador.AdminInfo;
-import controlador.AdminMensajes;
-import controlador.AdminTabla;
 
 public class AdminConexiones {
 
 	private static AdminConexiones instancia = null;
 	private AlmacenamientoConexiones almacenamiento;
-	private AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 	
 	private AdminConexiones() {
 		almacenamiento = new AlmacenamientoConexiones();

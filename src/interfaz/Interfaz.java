@@ -739,10 +739,8 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 	@Override
 	public void actualizarGrafico(XYChart chart) {
-		System.out.println("actualizar grafico");
 		panelContenedorGrafico.remove(panelGrafico);
 		panelGrafico = new XChartPanel(chart);
-		System.out.println(panelGrafico);
 		panelContenedorGrafico.add(panelGrafico, BorderLayout.CENTER);
 		panelContenedorGrafico.validate();
 		panelContenedorGrafico.repaint();

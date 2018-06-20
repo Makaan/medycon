@@ -11,9 +11,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import controlador.AdminMensajes;
+
 public class AlmacenamientoArchivo {
 	
 	private String nombreArchivo;
+	private AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 	
 	public AlmacenamientoArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
@@ -27,7 +30,7 @@ public class AlmacenamientoArchivo {
         	
         }  
         catch(IOException ex) {
-            System.out.println( "Error al leer el archivo '" + nombreArchivo + "'");                  
+        	adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
         }
 	}
 	
@@ -38,7 +41,7 @@ public class AlmacenamientoArchivo {
 			writer.close();
 		}
 		catch(IOException ex) {
-	            System.out.println( "Error al leer el archivo '" + nombreArchivo + "'");                  
+			adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
 	    }
 		
 	}
@@ -60,10 +63,10 @@ public class AlmacenamientoArchivo {
         }
         
         catch(FileNotFoundException ex) {
-            System.out.println("No se pudo abrir el archivo'" + nombreArchivo + "'");                
+        	adminMensajes.mostrarMensajeError("No se pudo abrir el archivo'" + nombreArchivo + "'");                
         }
         catch(IOException ex) {
-            System.out.println( "Error al leer el archivo '" + nombreArchivo + "'");                  
+        	adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
         }
 		return conexiones;
 	}
@@ -78,7 +81,7 @@ public class AlmacenamientoArchivo {
 			}
 		}
 		catch(IOException ex) {
-			System.out.println( "Error al leer el archivo '" + nombreArchivo + "'");                  
+			adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
 	    }
 		
 		

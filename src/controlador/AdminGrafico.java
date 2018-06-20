@@ -5,13 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import almacenamiento.AlmacenamientoArchivo;
 import interfaz.ConstructorGrafico;
 import interfaz.GraficoGUI;
 
@@ -25,7 +23,7 @@ public class AdminGrafico {
 	
 	public void graficarHora(List<String> datosTabla) {
 		//Crea datos para graficar el promedio cada 5 minutos en la ultima hora
-		Map<Date, List<Integer>> mapeoPromedios= new LinkedHashMap<Date,List<Integer>>();
+		Map<Date, List<Float>> mapeoPromedios= new LinkedHashMap<Date,List<Float>>();
 		Calendar tiempo = Calendar.getInstance();
 		
 		Calendar tiempoM5 = Calendar.getInstance();
@@ -64,18 +62,18 @@ public class AdminGrafico {
 		Calendar tiempoM60 = Calendar.getInstance();
 		tiempoM60.add(Calendar.MINUTE, -60);
 		
-		mapeoPromedios.put(tiempo.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM10.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM15.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM20.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM25.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM30.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM35.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM40.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM45.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM50.getTime(), new ArrayList<Integer>());
-		mapeoPromedios.put(tiempoM55.getTime(), new ArrayList<Integer>());
+		mapeoPromedios.put(tiempo.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM10.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM15.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM20.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM25.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM30.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM35.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM40.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM45.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM50.getTime(), new ArrayList<Float>());
+		mapeoPromedios.put(tiempoM55.getTime(), new ArrayList<Float>());
 		
 		Calendar fechaC = Calendar.getInstance();
 		SimpleDateFormat formateador = AdminTabla.formateador;
@@ -84,55 +82,55 @@ public class AdminGrafico {
 				String[] tokens = dato.split(",");
 				Date fecha = formateador.parse(tokens[0]);
 				fechaC.setTime(fecha);	
-				int altura = Integer.parseInt(tokens[1]);
+				Float porcentaje = (Float.parseFloat(tokens[1]))/100;
 				//Comparo con -60 minutos para quedarme con los datos que estan dentro de la ultima hora
 				//Despues con el resto en intervalos de 5 minutos
 				if(tiempoM60.compareTo(fechaC) <= 0) {
 					if(tiempoM55.compareTo(fechaC) >= 0) {
-						mapeoPromedios.get(tiempoM55.getTime()).add(altura);
+						mapeoPromedios.get(tiempoM55.getTime()).add(porcentaje);
 					}
 					else {
 						if(tiempoM50.compareTo(fechaC) >= 0) {
-							mapeoPromedios.get(tiempoM50.getTime()).add(altura);
+							mapeoPromedios.get(tiempoM50.getTime()).add(porcentaje);
 						}
 						else {
 							if(tiempoM45.compareTo(fechaC) >= 0) {
-								mapeoPromedios.get(tiempoM45.getTime()).add(altura);
+								mapeoPromedios.get(tiempoM45.getTime()).add(porcentaje);
 							}
 							else {
 								if(tiempoM40.compareTo(fechaC) >= 0) {
-									mapeoPromedios.get(tiempoM40.getTime()).add(altura);
+									mapeoPromedios.get(tiempoM40.getTime()).add(porcentaje);
 								}
 									else {
 										if(tiempoM35.compareTo(fechaC) >= 0) {
-											mapeoPromedios.get(tiempoM35.getTime()).add(altura);
+											mapeoPromedios.get(tiempoM35.getTime()).add(porcentaje);
 										}
 										else {
 											if(tiempoM30.compareTo(fechaC) >= 0) {
-												mapeoPromedios.get(tiempoM30.getTime()).add(altura);
+												mapeoPromedios.get(tiempoM30.getTime()).add(porcentaje);
 											}
 											else {
 												if(tiempoM25.compareTo(fechaC) >= 0) {
-													mapeoPromedios.get(tiempoM25.getTime()).add(altura);
+													mapeoPromedios.get(tiempoM25.getTime()).add(porcentaje);
 												}
 												else {
 													if(tiempoM20.compareTo(fechaC) >= 0) {
-														mapeoPromedios.get(tiempoM20.getTime()).add(altura);
+														mapeoPromedios.get(tiempoM20.getTime()).add(porcentaje);
 													}
 													else {
 														if(tiempoM15.compareTo(fechaC) >= 0) {
-															mapeoPromedios.get(tiempoM15.getTime()).add(altura);
+															mapeoPromedios.get(tiempoM15.getTime()).add(porcentaje);
 														}
 														else {
 															if(tiempoM10.compareTo(fechaC) >= 0) {
-																mapeoPromedios.get(tiempoM10.getTime()).add(altura);
+																mapeoPromedios.get(tiempoM10.getTime()).add(porcentaje);
 															}
 															else {
 																if(tiempoM5.compareTo(fechaC) >= 0) {
-																	mapeoPromedios.get(tiempoM5.getTime()).add(altura);
+																	mapeoPromedios.get(tiempoM5.getTime()).add(porcentaje);
 																}
 																else {
-																	mapeoPromedios.get(tiempo.getTime()).add(altura);
+																	mapeoPromedios.get(tiempo.getTime()).add(porcentaje);
 																}
 															}
 														}
@@ -148,16 +146,14 @@ public class AdminGrafico {
 			}	
 			
 			ArrayList<Date> fechasGrafico = new ArrayList<Date>();
-			ArrayList<Integer> promedioGrafico = new ArrayList<Integer>();
-			for(Entry<Date, List<Integer>> entry: mapeoPromedios.entrySet()) {
-				System.out.println(entry.getKey()+" "+entry.getValue().size());
+			ArrayList<Float> promedioGrafico = new ArrayList<Float>();
+			for(Entry<Date, List<Float>> entry: mapeoPromedios.entrySet()) {
 				if(entry.getValue().size() != 0) {
 					fechasGrafico.add(entry.getKey());
-					int acumulador = 0;
-					for(Integer i: entry.getValue()) {
+					float acumulador = new Float(0);
+					for(Float i: entry.getValue()) {
 						acumulador += i;
 					}
-					System.out.println("promedio "+acumulador/entry.getValue().size());
 					promedioGrafico.add(acumulador/entry.getValue().size());
 				}
 				
@@ -176,7 +172,7 @@ public class AdminGrafico {
 	public void graficarDia(List<String> datosTabla) {
 		
 		//Crea datos para graficar el promedio cada hora del ultimo dia
-				Map<Date, List<Integer>> mapeoPromedios= new LinkedHashMap<Date,List<Integer>>();
+				Map<Date, List<Float>> mapeoPromedios= new LinkedHashMap<Date,List<Float>>();
 				Calendar tiempo = Calendar.getInstance();
 				
 				Calendar tiempoM1 = Calendar.getInstance();
@@ -251,30 +247,30 @@ public class AdminGrafico {
 				Calendar tiempoM24 = Calendar.getInstance();
 				tiempoM24.add(Calendar.HOUR, -24);
 				
-				mapeoPromedios.put(tiempo.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM1.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM2.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM3.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM4.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM6.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM7.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM8.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM9.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM10.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM11.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM12.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM13.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM14.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM15.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM16.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM17.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM18.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM19.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM20.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM21.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM22.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM23.getTime(), new ArrayList<Integer>());
+				mapeoPromedios.put(tiempo.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM1.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM2.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM3.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM4.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM6.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM7.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM8.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM9.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM10.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM11.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM12.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM13.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM14.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM15.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM16.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM17.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM18.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM19.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM20.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM21.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM22.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM23.getTime(), new ArrayList<Float>());
 				
 				Calendar fechaC = Calendar.getInstance();
 				SimpleDateFormat formateador = AdminTabla.formateador;
@@ -283,103 +279,103 @@ public class AdminGrafico {
 						String[] tokens = dato.split(",");
 						Date fecha = formateador.parse(tokens[0]);
 						fechaC.setTime(fecha);
-						int altura = Integer.parseInt(tokens[1]);
+						Float porcentaje = (Float.parseFloat(tokens[1]))/100;
 						//Comparo con -24 horas para quedarme con los datos que estan dentro de la ultima hora
 						//Despues con el resto en intervalos de 1 hora
 						if(tiempoM24.compareTo(fechaC) <= 0) {
 							if(tiempoM23.compareTo(fechaC) >= 0) {
-								mapeoPromedios.get(tiempoM23.getTime()).add(altura);
+								mapeoPromedios.get(tiempoM23.getTime()).add(porcentaje);
 							}
 							else {
 								if(tiempoM22.compareTo(fechaC) >= 0) {
-									mapeoPromedios.get(tiempoM22.getTime()).add(altura);
+									mapeoPromedios.get(tiempoM22.getTime()).add(porcentaje);
 								}
 								else {
 									if(tiempoM21.compareTo(fechaC) >= 0) {
-										mapeoPromedios.get(tiempoM21.getTime()).add(altura);
+										mapeoPromedios.get(tiempoM21.getTime()).add(porcentaje);
 									}
 									else {
 										if(tiempoM20.compareTo(fechaC) >= 0) {
-											mapeoPromedios.get(tiempoM20.getTime()).add(altura);
+											mapeoPromedios.get(tiempoM20.getTime()).add(porcentaje);
 										}
 										else {
 											if(tiempoM19.compareTo(fechaC) >= 0) {
-												mapeoPromedios.get(tiempoM19.getTime()).add(altura);
+												mapeoPromedios.get(tiempoM19.getTime()).add(porcentaje);
 											}
 											else {
 												if(tiempoM18.compareTo(fechaC) >= 0) {
-													mapeoPromedios.get(tiempoM18.getTime()).add(altura);
+													mapeoPromedios.get(tiempoM18.getTime()).add(porcentaje);
 												}
 												else {
 													if(tiempoM17.compareTo(fechaC) >= 0) {
-														mapeoPromedios.get(tiempoM17.getTime()).add(altura);
+														mapeoPromedios.get(tiempoM17.getTime()).add(porcentaje);
 													}
 													else {
 														if(tiempoM16.compareTo(fechaC) >= 0) {
-															mapeoPromedios.get(tiempoM16.getTime()).add(altura);
+															mapeoPromedios.get(tiempoM16.getTime()).add(porcentaje);
 														}
 														else {
 															if(tiempoM15.compareTo(fechaC) >= 0) {
-																mapeoPromedios.get(tiempoM15.getTime()).add(altura);
+																mapeoPromedios.get(tiempoM15.getTime()).add(porcentaje);
 															}
 															else {
 																if(tiempoM14.compareTo(fechaC) >= 0) {
-																	mapeoPromedios.get(tiempoM14.getTime()).add(altura);
+																	mapeoPromedios.get(tiempoM14.getTime()).add(porcentaje);
 																}
 																else {
 																	if(tiempoM13.compareTo(fechaC) >= 0) {
-																		mapeoPromedios.get(tiempoM13.getTime()).add(altura);
+																		mapeoPromedios.get(tiempoM13.getTime()).add(porcentaje);
 																	}
 																	else {
 																		if(tiempoM12.compareTo(fechaC) >= 0) {
-																			mapeoPromedios.get(tiempoM12.getTime()).add(altura);
+																			mapeoPromedios.get(tiempoM12.getTime()).add(porcentaje);
 																		}
 																		else {
 																			if(tiempoM11.compareTo(fechaC) >= 0) {
-																				mapeoPromedios.get(tiempoM11.getTime()).add(altura);
+																				mapeoPromedios.get(tiempoM11.getTime()).add(porcentaje);
 																			}
 																			else {
 																				if(tiempoM10.compareTo(fechaC) >= 0) {
-																					mapeoPromedios.get(tiempoM10.getTime()).add(altura);
+																					mapeoPromedios.get(tiempoM10.getTime()).add(porcentaje);
 																				}
 																				else {
 																					if(tiempoM9.compareTo(fechaC) >= 0) {
-																						mapeoPromedios.get(tiempoM9.getTime()).add(altura);
+																						mapeoPromedios.get(tiempoM9.getTime()).add(porcentaje);
 																					}
 																					else {
 																						if(tiempoM8.compareTo(fechaC) >= 0) {
-																							mapeoPromedios.get(tiempoM8.getTime()).add(altura);
+																							mapeoPromedios.get(tiempoM8.getTime()).add(porcentaje);
 																						}
 																						else {
 																							if(tiempoM7.compareTo(fechaC) >= 0) {
-																								mapeoPromedios.get(tiempoM7.getTime()).add(altura);
+																								mapeoPromedios.get(tiempoM7.getTime()).add(porcentaje);
 																							}
 																							else {
 																								if(tiempoM6.compareTo(fechaC) >= 0) {
-																									mapeoPromedios.get(tiempoM6.getTime()).add(altura);
+																									mapeoPromedios.get(tiempoM6.getTime()).add(porcentaje);
 																								}
 																								else {
 																									if(tiempoM5.compareTo(fechaC) >= 0) {
-																										mapeoPromedios.get(tiempoM5.getTime()).add(altura);
+																										mapeoPromedios.get(tiempoM5.getTime()).add(porcentaje);
 																									}
 																									else {
 																										if(tiempoM4.compareTo(fechaC) >= 0) {
-																											mapeoPromedios.get(tiempoM4.getTime()).add(altura);
+																											mapeoPromedios.get(tiempoM4.getTime()).add(porcentaje);
 																										}
 																										else {
 																											if(tiempoM3.compareTo(fechaC) >= 0) {
-																												mapeoPromedios.get(tiempoM3.getTime()).add(altura);
+																												mapeoPromedios.get(tiempoM3.getTime()).add(porcentaje);
 																											}
 																											else {
 																												if(tiempoM2.compareTo(fechaC) >= 0) {
-																													mapeoPromedios.get(tiempoM2.getTime()).add(altura);
+																													mapeoPromedios.get(tiempoM2.getTime()).add(porcentaje);
 																												}
 																												else {
 																													if(tiempoM1.compareTo(fechaC) >= 0) {
-																														mapeoPromedios.get(tiempoM1.getTime()).add(altura);
+																														mapeoPromedios.get(tiempoM1.getTime()).add(porcentaje);
 																													}
 																													else {
-																														mapeoPromedios.get(tiempo.getTime()).add(altura);
+																														mapeoPromedios.get(tiempo.getTime()).add(porcentaje);
 																													}
 																												}
 																											}
@@ -407,13 +403,12 @@ public class AdminGrafico {
 					}	
 					
 					ArrayList<Date> fechasGrafico = new ArrayList<Date>();
-					ArrayList<Integer> promedioGrafico = new ArrayList<Integer>();
-					for(Entry<Date, List<Integer>> entry: mapeoPromedios.entrySet()) {
-						System.out.println(entry.getKey()+" "+entry.getValue().size());
+					ArrayList<Float> promedioGrafico = new ArrayList<Float>();
+					for(Entry<Date, List<Float>> entry: mapeoPromedios.entrySet()) {
 						if(entry.getValue().size() != 0) {
 							fechasGrafico.add(entry.getKey());
-							int acumulador = 0;
-							for(Integer i: entry.getValue()) {
+							float acumulador = 0;
+							for(Float i: entry.getValue()) {
 								acumulador += i;
 							}
 							promedioGrafico.add(acumulador/entry.getValue().size());
@@ -433,7 +428,7 @@ public class AdminGrafico {
 	
 	public void graficarSemana(List<String> datosTabla) {
 		//Crea datos para graficar el promedio cada dia de la ultima semana
-				Map<Date, List<Integer>> mapeoPromedios= new LinkedHashMap<Date,List<Integer>>();
+				Map<Date, List<Float>> mapeoPromedios= new LinkedHashMap<Date,List<Float>>();
 				Calendar tiempo = Calendar.getInstance();
 				
 				Calendar tiempoM1 = Calendar.getInstance();
@@ -457,13 +452,13 @@ public class AdminGrafico {
 				Calendar tiempoM7 = Calendar.getInstance();
 				tiempoM7.add(Calendar.HOUR, -7);
 			
-				mapeoPromedios.put(tiempo.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM1.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM2.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM3.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM4.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Integer>());
-				mapeoPromedios.put(tiempoM6.getTime(), new ArrayList<Integer>());
+				mapeoPromedios.put(tiempo.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM1.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM2.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM3.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM4.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Float>());
+				mapeoPromedios.put(tiempoM6.getTime(), new ArrayList<Float>());
 				
 				Calendar fechaC = Calendar.getInstance();
 				SimpleDateFormat formateador = AdminTabla.formateador;
@@ -472,35 +467,35 @@ public class AdminGrafico {
 						String[] tokens = dato.split(",");
 						Date fecha = formateador.parse(tokens[0]);
 						fechaC.setTime(fecha);
-						int altura = Integer.parseInt(tokens[1]);
+						Float porcentaje = (Float.parseFloat(tokens[1]))/100;
 						//Comparo con -7 dias para quedarme con los datos que estan dentro de la ultima hora
 						//Despues con el resto en intervalos de 1 dia
 						if(tiempoM7.compareTo(fechaC) <= 0) {
 							if(tiempoM6.compareTo(fechaC) >= 0) {
-								mapeoPromedios.get(tiempoM6.getTime()).add(altura);
+								mapeoPromedios.get(tiempoM6.getTime()).add(porcentaje);
 							}
 							else {
 								if(tiempoM5.compareTo(fechaC) >= 0) {
-									mapeoPromedios.get(tiempoM5.getTime()).add(altura);
+									mapeoPromedios.get(tiempoM5.getTime()).add(porcentaje);
 								}
 								else {
 									if(tiempoM4.compareTo(fechaC) >= 0) {
-										mapeoPromedios.get(tiempoM4.getTime()).add(altura);
+										mapeoPromedios.get(tiempoM4.getTime()).add(porcentaje);
 									}
 									else {
 										if(tiempoM3.compareTo(fechaC) >= 0) {
-											mapeoPromedios.get(tiempoM3.getTime()).add(altura);
+											mapeoPromedios.get(tiempoM3.getTime()).add(porcentaje);
 										}
 										else {
 											if(tiempoM2.compareTo(fechaC) >= 0) {
-												mapeoPromedios.get(tiempoM2.getTime()).add(altura);
+												mapeoPromedios.get(tiempoM2.getTime()).add(porcentaje);
 											}
 											else {
 												if(tiempoM1.compareTo(fechaC) >= 0) {
-													mapeoPromedios.get(tiempoM1.getTime()).add(altura);
+													mapeoPromedios.get(tiempoM1.getTime()).add(porcentaje);
 												}
 												else {
-													mapeoPromedios.get(tiempo.getTime()).add(altura);
+													mapeoPromedios.get(tiempo.getTime()).add(porcentaje);
 												}
 											}
 										}
@@ -511,16 +506,14 @@ public class AdminGrafico {
 					}	
 					
 					ArrayList<Date> fechasGrafico = new ArrayList<Date>();
-					ArrayList<Integer> promedioGrafico = new ArrayList<Integer>();
-					for(Entry<Date, List<Integer>> entry: mapeoPromedios.entrySet()) {
-						System.out.println(entry.getKey()+" "+entry.getValue().size());
+					ArrayList<Float> promedioGrafico = new ArrayList<Float>();
+					for(Entry<Date, List<Float>> entry: mapeoPromedios.entrySet()) {
 						if(entry.getValue().size() != 0) {
 							fechasGrafico.add(entry.getKey());
-							int acumulador = 0;
-							for(Integer i: entry.getValue()) {
+							float acumulador = 0;
+							for(Float i: entry.getValue()) {
 								acumulador += i;
 							}
-							System.out.println("promedio "+acumulador/entry.getValue().size());
 							promedioGrafico.add(acumulador/entry.getValue().size());
 						}
 						

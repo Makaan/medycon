@@ -9,9 +9,12 @@ import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import controlador.AdminMensajes;
 import controlador.AdminTabla;
 
 public class EscritorExcel {
+	
+	private static AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 	
 	private EscritorExcel() {}
 	
@@ -59,20 +62,22 @@ public class EscritorExcel {
         // Write the output to a file
         FileOutputStream fileOut;
 		try {
-			fileOut = new FileOutputStream("datos-exportados-"+nombre+".xlsx");
+			fileOut = new FileOutputStream(nombre+".xlsx");
 			workbook.write(fileOut);
 	        fileOut.close();
 
 	        // Closing the workbook
 	        workbook.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			adminMensajes.mostrarMensajeError("No se pudo guardar en esa ruta");
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+        finally {
+        	adminMensajes.mostrarMensajeInfo("Se exportó exitosamente el archivo");
+        }
 
 
 	}

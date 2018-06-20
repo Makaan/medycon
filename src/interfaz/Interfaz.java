@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 
+import almacenamiento.EscritorExcel;
 import conexion.AdminConexiones;
 import controlador.AdminMensajes;
 import controlador.AdminTabla;
@@ -565,8 +566,13 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 		
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						controlador.exportar();
-						
+						JFileChooser c = new JFileChooser();
+						int rVal = c.showSaveDialog(null);
+						if (rVal == JFileChooser.APPROVE_OPTION) {
+					        System.out.println(c.getSelectedFile().getName());
+					        System.out.println(c.getCurrentDirectory().toString());
+					        controlador.exportar(c.getCurrentDirectory().toString()+"/"+c.getSelectedFile().getName());
+					      }
 					}
 		        	
 		        });
@@ -673,6 +679,11 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 	public void mostrarMensajeError(String msg) {
 		JOptionPane.showMessageDialog(null,msg, "Error", JOptionPane.ERROR_MESSAGE);
+		
+	}
+	
+	public void mostrarMensajeInfo(String msg) {
+		JOptionPane.showMessageDialog(null,msg, "Informacion", JOptionPane.INFORMATION_MESSAGE);
 		
 	}
 	

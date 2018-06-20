@@ -26,4 +26,10 @@ public class AdminMensajes {
 			interfaz.mostrarMensajeError(msg);
 		}
 	}
+	
+	public void mostrarMensajeInfo(String msg) {
+		if(interfaz != null) {
+			interfaz.mostrarMensajeInfo(msg);
+		}
+	}
 }

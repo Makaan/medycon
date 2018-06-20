@@ -17,6 +17,7 @@ public class AlmacenamientoArchivo {
 	
 	private String nombreArchivo;
 	private AdminMensajes adminMensajes = AdminMensajes.getInstancia();
+	private String newLine = System.getProperty("line.separator");
 	
 	public AlmacenamientoArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
@@ -37,7 +38,7 @@ public class AlmacenamientoArchivo {
 	public void guardarEntrada(String entrada) {
 		try {
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(nombreArchivo, true)));
-			writer.println(entrada);
+			writer.print(entrada+newLine);
 			writer.close();
 		}
 		catch(IOException ex) {

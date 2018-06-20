@@ -104,9 +104,9 @@ public class Controlador implements Runnable {
 		return AdminTabla.getNombresColumnas();
 	}
 
-	public void exportar() {
+	public void exportar(String nombreArchivo) {
 		if(adminTabla != null)
-			EscritorExcel.exportar(AdminTabla.getNombresColumnas(), adminTabla.getDatosTabla(), nombreConexion);
+			EscritorExcel.exportar(AdminTabla.getNombresColumnas(), adminTabla.getDatosTabla(), nombreArchivo);
 	}
 
 	public void graficarSemana() {

@@ -19,7 +19,7 @@ public class AdminTabla {
 	private static final String[] columnas = {
     		"FECHA",
             "PORCENTAJE",
-            "DISTANCIA",
+            "ALTURA",
             "BOMBA 1",
             "BOMBA 2"};
 	
@@ -58,12 +58,13 @@ public class AdminTabla {
 		//Le saco espacios si hay
 		String distanciaRaw = tokens[5].substring(2).replaceAll("\\s", "");
 		int distancia = Integer.parseInt(distanciaRaw);
-		String sDistancia = Integer.toString(distancia);
-		filaArr[2] = sDistancia;
+		
 		
 		String nivelMedioRaw = tokens[7].substring(2).replaceAll("\\s", "");
 		int nivelMedio = Integer.parseInt(nivelMedioRaw);
 		int altura = nivelMedio - distancia;
+		
+		filaArr[2] = Integer.toString(altura);
 		
 		//Le saco espacios si hay
 		String NMRaw = tokens[8].substring(2).replaceAll("\\s", "");

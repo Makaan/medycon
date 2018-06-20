@@ -2,7 +2,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>medycon</groupId>
   <artifactId>medycon</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -13,6 +12,24 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+      <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-jar-plugin</artifactId>
+	      <version>3.0.2</version>
+	      <configuration>
+	        <archive>
+	          <manifest>
+	            <addClasspath>true</addClasspath>
+	            <mainClass>interfaz.Interfaz</mainClass>
+	          </manifest>
+	        </archive>
+	      </configuration>
+		</plugin>
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-shade-plugin</artifactId>
+      	<version>2.3</version>
       </plugin>
     </plugins>
   </build>
@@ -34,4 +51,8 @@
 	</dependency>
 
   </dependencies>
+  <version>1.0.0</version>
+  <properties>
+  	<mainClass>/medycon/src/interfaz/Interfaz.java</mainClass>
+  </properties>
 </project>

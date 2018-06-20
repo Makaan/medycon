@@ -50,9 +50,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     
     private JPanel panelGrafico;
     private JScrollPane scrollPane;
-    JPanel panelContenedorGrafico;
+    private JPanel panelContenedorGrafico;
     
-    private String conexionSeleccionada;
+    private String conexionSeleccionada = null;
     
     Map<String, String> mapeoNiveles;
 
@@ -93,7 +93,10 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         panelConexion.setLayout(gbl_panelConexion);
         
 	        JComboBox<String> comboBoxConexiones = new JComboBox<String>(adminConexiones.getNombreConexiones());
-	        conexionSeleccionada = comboBoxConexiones.getSelectedItem().toString();
+	        if(comboBoxConexiones.getSelectedItem() != null) {
+	        	conexionSeleccionada = comboBoxConexiones.getSelectedItem().toString();
+	        }
+	        
 	        GridBagConstraints gbc_comboBoxConexiones = new GridBagConstraints();
 	        gbc_comboBoxConexiones.anchor = GridBagConstraints.NORTH;
 	        gbc_comboBoxConexiones.gridwidth = 3;
@@ -108,7 +111,8 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					controlador.nuevaConexion(comboBoxConexiones.getSelectedItem().toString());
+					if(comboBoxConexiones.getSelectedItem() != null)
+						controlador.nuevaConexion(comboBoxConexiones.getSelectedItem().toString());
 					
 				}
 			});

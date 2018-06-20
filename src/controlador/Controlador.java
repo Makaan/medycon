@@ -35,7 +35,10 @@ public class Controlador implements Runnable {
 	public Controlador(Interfaz interfaz, String nombreConexion) {
 		this.interfaz = interfaz;
 		
-		adminTabla = new AdminTabla(interfaz, nombreConexion);
+		if(nombreConexion != null) {
+			adminTabla = new AdminTabla(interfaz, nombreConexion);
+		}
+		
 		adminInfo = new AdminInfo(interfaz);
 		adminGrafico = new AdminGrafico(interfaz);
 		
@@ -48,7 +51,6 @@ public class Controlador implements Runnable {
 			while(true) {
 				if(hayConexion.get()) {
 						String resu = conexion.consultarEstado();
-						System.out.println("\""+resu+"\"");
 						if(!resu.equals("")) {
 							adminTabla.agregarFila(resu);
 							adminInfo.actualizarDatos(resu);
@@ -103,29 +105,28 @@ public class Controlador implements Runnable {
 	}
 
 	public void exportar() {
-		EscritorExcel.exportar(AdminTabla.getNombresColumnas(), adminTabla.getDatosTabla(), nombreConexion);
-		
+		if(adminTabla != null)
+			EscritorExcel.exportar(AdminTabla.getNombresColumnas(), adminTabla.getDatosTabla(), nombreConexion);
 	}
 
 	public void graficarSemana() {
-		adminGrafico.graficarSemana(adminTabla.getDatosTabla());
-		
+		if(adminTabla != null)
+			adminGrafico.graficarSemana(adminTabla.getDatosTabla());
 	}
 
 	public void graficarDia() {
-		adminGrafico.graficarDia(adminTabla.getDatosTabla());
-		
+		if(adminTabla != null)
+			adminGrafico.graficarDia(adminTabla.getDatosTabla());
 	}
 
 	public void graficarHora() {
 		if(adminTabla != null) 
 			adminGrafico.graficarHora(adminTabla.getDatosTabla());
-		
 	}
 
 	public void borrarLista() {
-		adminTabla.borrarLista();
-		
+		if(adminTabla != null)
+			adminTabla.borrarLista();	
 	}
 
 }

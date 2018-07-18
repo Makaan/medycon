@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,6 +14,10 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ListSelectionEvent;
@@ -59,6 +65,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     private String conexionSeleccionada = null;
     
     Map<String, String> mapeoNiveles;
+    
+    File soundFile = new File("res/snd/alert.mp3");
+    
 
     public Interfaz() {
     	
@@ -807,7 +816,47 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 			}
         	
         });
-        //new Thread(controlador).start();
+        
+        SystemTray tray = SystemTray.getSystemTray();
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image image = new ImageIcon(getClass().getResource("/res/img/logo.png")).getImage();
+    
+
+        PopupMenu menu = new PopupMenu();
+
+        MenuItem messageItem = new MenuItem("About");
+        messageItem.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(null, "MedyCon 2018");
+          }
+        });
+        menu.add(messageItem);
+
+        MenuItem closeItem = new MenuItem("Cerrar");
+        closeItem.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+          }
+        });
+        menu.add(closeItem);
+        TrayIcon icon = new TrayIcon(image, "MedyCon", menu);
+        icon.setImageAutoSize(true);
+        icon.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(true);
+				
+			}
+        	
+        });
+
+        try {
+			tray.add(icon);
+		} catch (AWTException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     }
     
     public static void main(String[] args) {
@@ -830,6 +879,17 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     
 
 	public void mostrarMensajeError(String msg) {
+		// Open an audio input stream.           
+		try {
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);              
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioIn);
+			clip.start();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+       
 		JOptionPane.showMessageDialog(null,msg, "Error", JOptionPane.ERROR_MESSAGE);
 		
 	}

@@ -8,35 +8,64 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import controlador.AdminMensajes;
+
 
 public class Conexion {
 	
-	private final int PUERTO = 1000;
+	private AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 
 	private String ip;
 	private String id;
+	private int puerto;
+	private int tiempo;
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
 	
-	public Conexion(String ip, String id) throws IOException {
+	public Conexion(String ip, String puerto, String id, String tiempo) {
 		this.ip = ip;
+		this.puerto = Integer.parseInt(puerto);
 		this.id = id;
-
-		socket = new Socket(ip, PUERTO);
-        System.out.println("conectando");
+		this.tiempo = Integer.parseInt(tiempo)/2;
+		
+		try {
+		socket = new Socket(this.ip, this.puerto);
         	
         writer = new PrintWriter(socket.getOutputStream(), true);
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		System.out.println("conectado");
+		}
+		catch (IOException e) {
+			adminMensajes.mostrarMensajeError("Error al conectarse con el dispositivo en ip: "+ip+":"+puerto);
+		}
 	}
 	
-	public String consultarEstado() throws IOException {
+	public String consultarEstado() {
 		writer.println("<"+id+"?ET>");
-		return reader.readLine();
+		String result = "";
+		try {
+			result = reader.readLine();
+		} catch (IOException e) {
+			adminMensajes.mostrarMensajeError("Error al consultar el dispositivo en ip: "+ip+":"+puerto);
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
-	public void cerrarConexion() throws IOException {
-		socket.close();
+	public void cerrarConexion() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			adminMensajes.mostrarMensajeError("Error al cerrar la conexion con el dispositivo: "+ip+":"+puerto);
+			e.printStackTrace();
+		}
+	}
+	
+	public Integer getTiempo() {
+		return tiempo;
+	}
+	
+	public void setTiempo(Integer tiempo) {
+		this.tiempo = tiempo;
 	}
 }

@@ -1,6 +1,7 @@
 package controlador;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import interfaz.InfoGUI;
@@ -13,8 +14,8 @@ public class AdminInfo {
 		this.interfaz = interfaz;
 	}
 
-	public void actualizarDatos(String rawData) {
-		String[] tokens = rawData.substring(1, rawData.length()-2).split(",");
+	public void actualizarDatos(String resu) {
+		String[] tokens = resu.substring(1, resu.length()-2).split(",");
 		Map<String, String> mapeoDatos = new HashMap<String, String>();
 		
 		mapeoDatos.put("NivelAbsolutoMax" , tokens[8].substring(2));

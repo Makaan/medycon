@@ -26,6 +26,13 @@ public class AdminTabla {
 	public AdminTabla(TablaGUI<String> interfaz, String identificador) {
 		this.interfaz = interfaz; 
 		almacenamientoArchivo = new AlmacenamientoArchivo(identificador+"Tabla");
+		actualizarDatosTabla();
+		
+		this.identificador = identificador;
+		
+	}
+	
+	public void actualizarDatosTabla() {
 		List<String> entradas = almacenamientoArchivo.getEntradas();
 		String[][] filasPrevias = new String[entradas.size()][columnas.length];
 		int i = 0;
@@ -38,10 +45,8 @@ public class AdminTabla {
 		}
 		interfaz.actualizarDatosTabla(filasPrevias);	
 		
-		this.identificador = identificador;
-		
 	}
-	
+
 	public static String[] getNombresColumnas() {
 		return columnas;
 	}
@@ -81,7 +86,8 @@ public class AdminTabla {
 		String fila = String.join(",", filaArr);
 		
 		almacenamientoArchivo.guardarEntrada(fila);
-		interfaz.aggregarDatoTabla(filaArr);
+		
+		actualizarDatosTabla();
 	}
 	
 	private String onOff(String estado) {
@@ -97,6 +103,11 @@ public class AdminTabla {
 	public void borrarLista() {
 		almacenamientoArchivo.borrarEntradas();
 		interfaz.actualizarDatosTabla(new String[0][0]);
+		
+	}
+
+	public void renombrar(String nombreConexion) {
+		almacenamientoArchivo.renombrarArchivo(nombreConexion);
 		
 	}
 	

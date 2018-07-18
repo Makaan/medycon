@@ -10,6 +10,7 @@ public class AdminConexiones {
 	private AlmacenamientoConexiones almacenamiento;
 	
 	private AdminConexiones() {
+		System.out.println("new adminConexiones");
 		almacenamiento = new AlmacenamientoConexiones();
 	}
 	
@@ -20,8 +21,8 @@ public class AdminConexiones {
 		return instancia;
 	}
 	
-	public void guardarConexion(String nombre, String ip, String id) {
-		almacenamiento.guardarConexion(nombre, ip, id);
+	public void guardarConexion(String nombre, String ip, String puerto, String id, String tiempo) {
+		almacenamiento.guardarConexion(nombre, ip, puerto, id, tiempo);
 	}
 	
 	public String[] getNombreConexiones() {
@@ -39,6 +40,10 @@ public class AdminConexiones {
 		Map<String, Vector<String>> mapeo = almacenamiento.getConexiones();
 		return mapeo.get(nombreConexion);
 		
+	}
+	
+	public void editarConexion(String nombreViejo, String nombreConexion, String ip, String puerto, String id, String tiempo) {
+		almacenamiento.editarConexion(nombreViejo, nombreConexion, ip, puerto, id, tiempo);
 	}
 
 }

@@ -8,11 +8,14 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.knowm.xchart.XChartPanel;
@@ -30,7 +33,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
     private static final long serialVersionUID = 1L;
     
-    private static AdminConexiones adminConexiones = AdminConexiones.getInstancia();
+    private final static AdminConexiones adminConexiones = AdminConexiones.getInstancia();
     
     private JTable table;
     private DefaultTableModel tableModel;
@@ -92,28 +95,52 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         getContentPane().add(panelConexion, gbc_panelConexion);
         GridBagLayout gbl_panelConexion = new GridBagLayout();
         panelConexion.setLayout(gbl_panelConexion);
-        
-	        JComboBox<String> comboBoxConexiones = new JComboBox<String>(adminConexiones.getNombreConexiones());
-	        if(comboBoxConexiones.getSelectedItem() != null) {
-	        	conexionSeleccionada = comboBoxConexiones.getSelectedItem().toString();
+        	
+        	DefaultListModel<String> listaModel = new DefaultListModel<String>();
+        	
+        	for(String nombre: adminConexiones.getNombreConexiones()) {
+        		listaModel.addElement(nombre);
+        	}
+	        JList<String> listaConexiones = new JList<String>(listaModel);
+	        listaConexiones.addListSelectionListener( new ListSelectionListener() {
+
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					conexionSeleccionada = listaConexiones.getSelectedValue();
+					controlador.conexionSeleccionada(conexionSeleccionada);
+				}
+	        	
+	        });
+	        
+	        
+
+	        if(listaConexiones.getSelectedValue() != null) {
+	        	conexionSeleccionada = listaConexiones.getSelectedValue().toString();
 	        }
 	        
-	        GridBagConstraints gbc_comboBoxConexiones = new GridBagConstraints();
-	        gbc_comboBoxConexiones.anchor = GridBagConstraints.NORTH;
-	        gbc_comboBoxConexiones.gridwidth = 3;
-	        gbc_comboBoxConexiones.fill = GridBagConstraints.BOTH;
-	        gbc_comboBoxConexiones.insets = new Insets(10, 10, 10, 10);
-	        gbc_comboBoxConexiones.gridx = 0;
-	        gbc_comboBoxConexiones.gridy = 0;
-	        panelConexion.add(comboBoxConexiones, gbc_comboBoxConexiones);
+	        JScrollPane scrollListaConexiones = new JScrollPane(listaConexiones);
+	        scrollListaConexiones.setBorder(BorderFactory.createTitledBorder("Lista de conexiones"));
+	        
+	        GridBagConstraints gbc_scrollListaConexiones = new GridBagConstraints();
+	        gbc_scrollListaConexiones.anchor = GridBagConstraints.NORTH;
+	        gbc_scrollListaConexiones.gridheight = 6;
+	        gbc_scrollListaConexiones.gridwidth = 2;
+	        gbc_scrollListaConexiones.weightx = 60;
+	        gbc_scrollListaConexiones.fill = GridBagConstraints.BOTH;
+	        gbc_scrollListaConexiones.insets = new Insets(10, 10, 10, 10);
+	        gbc_scrollListaConexiones.gridx = 1;
+	        gbc_scrollListaConexiones.gridy = 0;
+	        panelConexion.add(scrollListaConexiones, gbc_scrollListaConexiones);
 	        
 	        JButton btnConectar = new JButton("Conectar");
 	        btnConectar.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if(comboBoxConexiones.getSelectedItem() != null)
-						controlador.nuevaConexion(comboBoxConexiones.getSelectedItem().toString());
+					if(listaConexiones.getSelectedValue() != null) {
+						String nombreConexion = listaConexiones.getSelectedValue().toString();
+						controlador.nuevaConexion(nombreConexion);
+					}
 					
 				}
 			});
@@ -121,7 +148,8 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        gbc_btnConectar.fill = GridBagConstraints.BOTH;
 	        gbc_btnConectar.insets = new Insets(0, 0, 5, 5);
 	        gbc_btnConectar.gridx = 0;
-	        gbc_btnConectar.gridy = 1;
+	        gbc_btnConectar.gridy = 0;
+	        gbc_btnConectar.weightx = 25;
 	        panelConexion.add(btnConectar, gbc_btnConectar);
         
 	        JButton btnDesconectar = new JButton("Desconectar");
@@ -129,36 +157,41 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					controlador.cerrarConexion();
+					controlador.cerrarConexion(listaConexiones.getSelectedValue());
 				}
 	        	
 	        });
 	        GridBagConstraints gbc_btnDesconectar = new GridBagConstraints();
 	        gbc_btnDesconectar.fill = GridBagConstraints.BOTH;
 	        gbc_btnDesconectar.insets = new Insets(0, 0, 5, 5);
-	        gbc_btnDesconectar.gridx = 1;
+	        gbc_btnDesconectar.gridx = 0;
 	        gbc_btnDesconectar.gridy = 1;
+	        gbc_btnDesconectar.weightx = 25;
 	        panelConexion.add(btnDesconectar, gbc_btnDesconectar);
 	        
 	        JButton btnNuevaConexion = new JButton("Nueva Conexion");
 	        JTextField nombre = new JTextField();
         	JTextField ip = new JTextField();
+        	JTextField puerto = new JTextField();
         	JTextField id = new JTextField();
+        	
         	Object[] message = {
         	    "Nombre:", nombre,
         	    "ip:", ip,
+        	    "puerto", puerto,
         	    "id:", id
+        	    
         	};
 	        btnNuevaConexion.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					int option = JOptionPane.showConfirmDialog(null, message, "Crear Nueva Conexion", JOptionPane.OK_CANCEL_OPTION);
 		        	if (option == JOptionPane.OK_OPTION) {
-		        		if(!nombre.getText().equals("") || !ip.getText().equals("") || !id.getText().equals("")) {
+		        		if(!nombre.getText().equals("") || !ip.getText().equals("") || !id.getText().equals("") || !puerto.getText().equals("")) {
 		        			if (isValidIP(ip.getText())) {
-			        	        adminConexiones.guardarConexion(nombre.getText(), ip.getText(), id.getText());
-			        	        comboBoxConexiones.addItem(nombre.getText());
-			        	        comboBoxConexiones.setSelectedItem(nombre.getText());
+			        	        adminConexiones.guardarConexion(nombre.getText(), ip.getText(), puerto.getText(), id.getText(), "30000");
+			        	        ListModel<String> listModel = listaConexiones.getModel();
+			        	        ((DefaultListModel<String>) listModel).addElement(nombre.getText());
 			        	    } else {
 			        	    	mostrarMensajeError("La IP ingresada no es valida");
 			        	    }
@@ -171,12 +204,104 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				}
 			});
 	        GridBagConstraints gbc_btnNuevaConexion = new GridBagConstraints();
-	        gbc_btnNuevaConexion.insets = new Insets(0, 0, 5, 0);
+	        gbc_btnNuevaConexion.insets = new Insets(0, 0, 5, 5);
 	        gbc_btnNuevaConexion.fill = GridBagConstraints.BOTH;
-	        gbc_btnNuevaConexion.gridx = 2;
-	        gbc_btnNuevaConexion.gridy = 1;
+	        gbc_btnNuevaConexion.gridx = 0;
+	        gbc_btnNuevaConexion.gridy = 2;
+	        gbc_btnNuevaConexion.weightx = 25;
 	        panelConexion.add(btnNuevaConexion, gbc_btnNuevaConexion);
-        
+	        
+	        JButton btnEditarConexion = new JButton("EditarConexion");
+	        
+	        JTextField nombreEdit = new JTextField();
+        	JTextField ipEdit = new JTextField();
+        	JTextField puertoEdit = new JTextField();
+        	JTextField idEdit = new JTextField();
+        	Object[] editar = {
+        	    "Nombre:", nombreEdit,
+        	    "ip:", ipEdit,
+        	    "puerto", puertoEdit,
+        	    "id:", idEdit
+        	    
+        	};
+	        btnEditarConexion.addActionListener(new ActionListener() {
+	        	
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(conexionSeleccionada != null) {
+						Vector<String> datosConexion = AdminConexiones.getInstancia().getConexion(conexionSeleccionada);
+						nombreEdit.setText(conexionSeleccionada);
+						ipEdit.setText(datosConexion.get(0));
+						puertoEdit.setText(datosConexion.get(1));
+						idEdit.setText(datosConexion.get(2));
+						
+						int option = JOptionPane.showConfirmDialog(null, editar, "Editar Conexion", JOptionPane.OK_CANCEL_OPTION);
+			        	if (option == JOptionPane.OK_OPTION) {
+			        		if(!nombreEdit.getText().equals("") || !ipEdit.getText().equals("") || !idEdit.getText().equals("") || !puertoEdit.getText().equals("")) {
+			        			if (isValidIP(ipEdit.getText())) {
+			        				System.out.println(nombreEdit.getText());
+			        				controlador.editarConexion(conexionSeleccionada, nombreEdit.getText(), ipEdit.getText(), puertoEdit.getText(), idEdit.getText());
+			        				DefaultListModel<String> listaModel = new DefaultListModel<String>();
+			        	        	
+			        	        	for(String nombre: adminConexiones.getNombreConexiones()) {
+			        	        		listaModel.addElement(nombre);
+			        	        	}
+			        	        	listaConexiones.setModel(listaModel);
+				        	    } else {
+				        	    	mostrarMensajeError("La IP ingresada no es valida");
+				        	    }
+			        		}
+			        		else {
+			        			mostrarMensajeError("Se deben completar todos los campos");
+			        		}
+			        	    
+			        	}
+						
+					}
+					
+					
+				};
+	        	
+	        });
+	        GridBagConstraints gbc_btnEditarConexion = new GridBagConstraints();
+	        gbc_btnEditarConexion.fill = GridBagConstraints.BOTH;
+	        gbc_btnEditarConexion.insets = new Insets(0, 0, 5, 5);
+	        gbc_btnEditarConexion.gridx = 0;
+	        gbc_btnEditarConexion.gridy = 3;
+	        gbc_btnEditarConexion.weightx = 25;
+	        panelConexion.add(btnEditarConexion, gbc_btnEditarConexion);
+	        
+	        JButton btnVelocidadMuestreo = new JButton("Velocidad de Muestreo");
+	        btnVelocidadMuestreo.addActionListener(new ActionListener() {
+	        	JTextField velocidad = new JTextField();
+	        	Object[] message = {
+	            	    "Velocidad en segundos:", velocidad
+	        	};
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int option = JOptionPane.showConfirmDialog(null, message, "Modificar la velocidad de muestreo", JOptionPane.OK_CANCEL_OPTION);
+		        	if (option == JOptionPane.OK_OPTION) {
+		        		if(!velocidad.getText().equals("")) {
+		        			controlador.modificarVelocidadMuestreo(velocidad.getText()+"000", listaConexiones.getSelectedValue());
+		        		}
+		        		else {
+		        			mostrarMensajeError("Se deben completar todos los campos");
+		        		}
+		        	    
+		        	}
+				}
+	        	
+	        });
+	        GridBagConstraints gbc_btnVelocidadMuestreo = new GridBagConstraints();
+	        gbc_btnVelocidadMuestreo.fill = GridBagConstraints.BOTH;
+	        gbc_btnVelocidadMuestreo.insets = new Insets(0, 0, 5, 5);
+	        gbc_btnVelocidadMuestreo.gridx = 0;
+	        gbc_btnVelocidadMuestreo.gridy = 4;
+	        gbc_btnVelocidadMuestreo.weightx = 25;
+	        panelConexion.add(btnVelocidadMuestreo, gbc_btnVelocidadMuestreo);
+	        
         /* PANEL INFO */
 
         JPanel panelInfo = new JPanel();
@@ -554,7 +679,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						controlador.borrarLista();
+						controlador.borrarLista(conexionSeleccionada);
 						
 					}
 		        	
@@ -571,7 +696,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 						if (rVal == JFileChooser.APPROVE_OPTION) {
 					        System.out.println(c.getSelectedFile().getName());
 					        System.out.println(c.getCurrentDirectory().toString());
-					        controlador.exportar(c.getCurrentDirectory().toString()+"/"+c.getSelectedFile().getName());
+					        controlador.exportar(conexionSeleccionada, c.getCurrentDirectory().toString()+"/"+c.getSelectedFile().getName());
 					      }
 					}
 		        	
@@ -607,7 +732,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						controlador.graficarSemana();
+						controlador.graficarSemana(listaConexiones.getSelectedValue());
 						
 					}
 	        		
@@ -619,7 +744,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						controlador.graficarDia();
+						controlador.graficarDia(conexionSeleccionada);
 						
 					}
 	        		
@@ -631,7 +756,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						controlador.graficarHora();
+						controlador.graficarHora(conexionSeleccionada);
 						
 					}
 	        		
@@ -642,11 +767,18 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     	                public void windowClosing(WindowEvent e){
     	                	int reply = JOptionPane.showConfirmDialog(null, "¿Seguro que desea cerrar la aplicacion?", "Cerrar aplicacion", JOptionPane.YES_NO_OPTION);
     	                    if (reply == JOptionPane.YES_OPTION) {
-    	                      controlador.cerrarConexion();
+    	                      //controlador.cerrarConexiones();
     	                      System.exit(0);
     	                    }
     	                        
     	                }
+    	                
+    	                public void windowIconified(WindowEvent e)
+    	                {
+    	                    setVisible(false);
+    	                }
+    	                
+    	                
     	            });
 
     	
@@ -655,7 +787,27 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         setVisible(true); // important
         
         controlador = new Controlador(this, conexionSeleccionada);
-        new Thread(controlador).start();
+        
+        listaConexiones.setCellRenderer(new ListCellRenderer<String>() {
+
+			@Override
+			public Component getListCellRendererComponent(JList<? extends String> list, String value, int index,
+					boolean isSelected, boolean cellHasFocus) {
+				JLabel item = new JLabel(value);
+				
+				item.setOpaque(true);
+				
+				if(controlador.estaConectado(value)) {
+					item.setForeground(Color.green);
+				}
+				if(isSelected) {
+					item.setBackground(Color.LIGHT_GRAY);
+				}
+				return item;
+			}
+        	
+        });
+        //new Thread(controlador).start();
     }
     
     public static void main(String[] args) {

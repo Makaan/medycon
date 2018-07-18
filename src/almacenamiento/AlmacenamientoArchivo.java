@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +16,21 @@ import controlador.AdminMensajes;
 
 public class AlmacenamientoArchivo {
 	
+	private final String dir = System.getProperty("user.home") + File.separator + "Medycon"+ File.separator;
+	
 	private String nombreArchivo;
+	private File archivo;
 	private AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 	private String newLine = System.getProperty("line.separator");
 	
 	public AlmacenamientoArchivo(String nombreArchivo) {
-		this.nombreArchivo = nombreArchivo;
-		File archivo = new File(nombreArchivo);
+		this.nombreArchivo = dir + nombreArchivo;
+		System.out.println(dir+nombreArchivo);
+		archivo = new File(this.nombreArchivo);
 		
         try {
+        	if(!archivo.getParentFile().exists())
+        		archivo.mkdirs();
         	//Si el archivo no existe lo crea.
         	if(!archivo.exists()) {
     			archivo.createNewFile();
@@ -85,6 +92,25 @@ public class AlmacenamientoArchivo {
 			adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
 	    }
 		
+		
+	}
+
+	public void renombrarArchivo(String nuevo) {
+		File archivoNuevo = new File(nuevo);
+		
+        try {
+        	//Si el archivo no existe lo crea.
+        	if(!archivoNuevo.exists()) {
+        		archivoNuevo.createNewFile();
+    		}
+        	archivo.renameTo(archivoNuevo);
+        	nombreArchivo = nuevo;
+        	
+        }  
+        catch(IOException ex) {
+        	adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
+        }
+        
 		
 	}
 

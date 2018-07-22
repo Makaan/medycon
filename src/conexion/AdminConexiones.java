@@ -10,7 +10,6 @@ public class AdminConexiones {
 	private AlmacenamientoConexiones almacenamiento;
 	
 	private AdminConexiones() {
-		System.out.println("new adminConexiones");
 		almacenamiento = new AlmacenamientoConexiones();
 	}
 	
@@ -21,8 +20,8 @@ public class AdminConexiones {
 		return instancia;
 	}
 	
-	public void guardarConexion(String nombre, String ip, String puerto, String id, String tiempo) {
-		almacenamiento.guardarConexion(nombre, ip, puerto, id, tiempo);
+	public void guardarConexion(String nombre, String ip, String puerto, String id, String tiempo, String alarmaMin, String alarmaMax) {
+		almacenamiento.guardarConexion(nombre, ip, puerto, id, tiempo, alarmaMin, alarmaMax);
 	}
 	
 	public String[] getNombreConexiones() {
@@ -36,14 +35,18 @@ public class AdminConexiones {
 		return conexiones;
 	}
 
-	public Vector<String> getConexion(String nombreConexion) {
-		Map<String, Vector<String>> mapeo = almacenamiento.getConexiones();
-		return mapeo.get(nombreConexion);
+	public Map<String,String> getConexion(String nombreConexion) {
+		return almacenamiento.getConexion(nombreConexion);
 		
 	}
 	
-	public void editarConexion(String nombreViejo, String nombreConexion, String ip, String puerto, String id, String tiempo) {
-		almacenamiento.editarConexion(nombreViejo, nombreConexion, ip, puerto, id, tiempo);
+	public void editarConexion(String nombreViejo, String nombreConexion, String ip, String puerto, String id, String tiempo, String alarmaMin, String alarmaMax) {
+		almacenamiento.editarConexion(nombreViejo, nombreConexion, ip, puerto, id, tiempo, alarmaMin, alarmaMax);
+	}
+
+	public void eliminarConexion(String nombreConexion) {
+		almacenamiento.eliminarConexion(nombreConexion);
+		
 	}
 
 }

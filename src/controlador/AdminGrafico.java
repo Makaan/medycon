@@ -160,7 +160,7 @@ public class AdminGrafico {
 					
 				}
 				
-				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Altura promedio ultima hora - "+ nombre));
+				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Nivel promedio última hora - "+ nombre));
 				
 				
 			} catch (ParseException e) {
@@ -419,7 +419,7 @@ public class AdminGrafico {
 					
 				}
 				
-				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Altura promedio ulitmo dia - "+ nombre));
+				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Nivel promedio último dia - "+ nombre));
 				
 				
 			} catch (ParseException e) {
@@ -433,31 +433,32 @@ public class AdminGrafico {
 	}
 	
 	public void graficarSemana(String nombre, List<String> datosTabla) {
+
 		if(datosTabla.size() != 0) {
 			//Crea datos para graficar el promedio cada dia de la ultima semana
 			Map<Date, List<Float>> mapeoPromedios= new LinkedHashMap<Date,List<Float>>();
 			Calendar tiempo = Calendar.getInstance();
 			
 			Calendar tiempoM1 = Calendar.getInstance();
-			tiempoM1.add(Calendar.HOUR, -1);
+			tiempoM1.add(Calendar.DATE, -1);
 			
 			Calendar tiempoM2 = Calendar.getInstance();
-			tiempoM2.add(Calendar.HOUR, -2);
+			tiempoM2.add(Calendar.DATE, -2);
 			
 			Calendar tiempoM3 = Calendar.getInstance();
-			tiempoM3.add(Calendar.HOUR, -3);
+			tiempoM3.add(Calendar.DATE, -3);
 			
 			Calendar tiempoM4 = Calendar.getInstance();
-			tiempoM4.add(Calendar.HOUR, -4);
+			tiempoM4.add(Calendar.DATE, -4);
 			
 			Calendar tiempoM5 = Calendar.getInstance();
-			tiempoM5.add(Calendar.HOUR, -5);
+			tiempoM5.add(Calendar.DATE, -5);
 			
 			Calendar tiempoM6 = Calendar.getInstance();
-			tiempoM6.add(Calendar.HOUR, -6);
+			tiempoM6.add(Calendar.DATE, -6);
 			
 			Calendar tiempoM7 = Calendar.getInstance();
-			tiempoM7.add(Calendar.HOUR, -7);
+			tiempoM7.add(Calendar.DATE, -7);
 		
 			mapeoPromedios.put(tiempo.getTime(), new ArrayList<Float>());
 			mapeoPromedios.put(tiempoM1.getTime(), new ArrayList<Float>());
@@ -469,6 +470,7 @@ public class AdminGrafico {
 			
 			Calendar fechaC = Calendar.getInstance();
 			SimpleDateFormat formateador = AdminTabla.formateador;
+			
 			try {
 				for(String dato: datosTabla) {
 					String[] tokens = dato.split(",");
@@ -510,7 +512,7 @@ public class AdminGrafico {
 							}
 						}
 					}
-				}	
+				}
 				
 				ArrayList<Date> fechasGrafico = new ArrayList<Date>();
 				ArrayList<Float> promedioGrafico = new ArrayList<Float>();
@@ -526,7 +528,328 @@ public class AdminGrafico {
 					
 				}
 				
-				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Altura promedio ultima semana - "+ nombre));
+				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Nivel promedio última semana - "+ nombre));
+				
+				
+			} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	public void graficarMes(String nombre, List<String> datosTabla) {
+
+		if(datosTabla.size() != 0) {
+			//Crea datos para graficar el promedio cada dia de la ultima semana
+			Map<Date, List<Float>> mapeoPromedios= new LinkedHashMap<Date,List<Float>>();
+			Calendar tiempo = Calendar.getInstance();
+			
+			Calendar tiempoM1 = Calendar.getInstance();
+			tiempoM1.add(Calendar.DATE, -1);
+			
+			Calendar tiempoM2 = Calendar.getInstance();
+			tiempoM2.add(Calendar.DATE, -2);
+			
+			Calendar tiempoM3 = Calendar.getInstance();
+			tiempoM3.add(Calendar.DATE, -3);
+			
+			Calendar tiempoM4 = Calendar.getInstance();
+			tiempoM4.add(Calendar.DATE, -4);
+			
+			Calendar tiempoM5 = Calendar.getInstance();
+			tiempoM5.add(Calendar.DATE, -5);
+			
+			Calendar tiempoM6 = Calendar.getInstance();
+			tiempoM6.add(Calendar.DATE, -6);
+			
+			Calendar tiempoM7 = Calendar.getInstance();
+			tiempoM7.add(Calendar.DATE, -7);
+			
+			Calendar tiempoM8 = Calendar.getInstance();
+			tiempoM8.add(Calendar.DATE, -8);
+			
+			Calendar tiempoM9 = Calendar.getInstance();
+			tiempoM9.add(Calendar.DATE, -9);
+			
+			Calendar tiempoM10 = Calendar.getInstance();
+			tiempoM10.add(Calendar.DATE, -10);
+			
+			Calendar tiempoM11 = Calendar.getInstance();
+			tiempoM11.add(Calendar.DATE, -11);
+			
+			Calendar tiempoM12 = Calendar.getInstance();
+			tiempoM12.add(Calendar.DATE, -12);
+			
+			Calendar tiempoM13 = Calendar.getInstance();
+			tiempoM13.add(Calendar.DATE, -13);
+			
+			Calendar tiempoM14 = Calendar.getInstance();
+			tiempoM14.add(Calendar.DATE, -14);
+			
+			Calendar tiempoM15 = Calendar.getInstance();
+			tiempoM15.add(Calendar.DATE, -15);
+			
+			Calendar tiempoM16 = Calendar.getInstance();
+			tiempoM16.add(Calendar.DATE, -16);
+			
+			Calendar tiempoM17 = Calendar.getInstance();
+			tiempoM17.add(Calendar.DATE, -17);
+			
+			Calendar tiempoM18 = Calendar.getInstance();
+			tiempoM18.add(Calendar.DATE, -18);
+			
+			Calendar tiempoM19 = Calendar.getInstance();
+			tiempoM19.add(Calendar.DATE, -19);
+			
+			Calendar tiempoM20 = Calendar.getInstance();
+			tiempoM20.add(Calendar.DATE, -20);
+			
+			Calendar tiempoM21 = Calendar.getInstance();
+			tiempoM21.add(Calendar.DATE, -21);
+			
+			Calendar tiempoM22 = Calendar.getInstance();
+			tiempoM22.add(Calendar.DATE, -22);
+			
+			Calendar tiempoM23 = Calendar.getInstance();
+			tiempoM23.add(Calendar.DATE, -23);
+			
+			Calendar tiempoM24 = Calendar.getInstance();
+			tiempoM24.add(Calendar.DATE, -24);
+			
+			Calendar tiempoM25 = Calendar.getInstance();
+			tiempoM25.add(Calendar.DATE, -25);
+			
+			Calendar tiempoM26 = Calendar.getInstance();
+			tiempoM26.add(Calendar.DATE, -26);
+			
+			Calendar tiempoM27 = Calendar.getInstance();
+			tiempoM27.add(Calendar.DATE, -27);
+			
+			Calendar tiempoM28 = Calendar.getInstance();
+			tiempoM28.add(Calendar.DATE, -28);
+			
+			Calendar tiempoM29 = Calendar.getInstance();
+			tiempoM29.add(Calendar.DATE, -29);
+			
+			Calendar tiempoM30 = Calendar.getInstance();
+			tiempoM30.add(Calendar.DATE, -30);
+		
+			mapeoPromedios.put(tiempo.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM1.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM2.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM3.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM4.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM5.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM6.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM7.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM8.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM9.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM10.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM11.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM12.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM13.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM14.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM15.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM16.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM17.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM18.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM19.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM20.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM21.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM22.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM23.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM24.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM25.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM26.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM27.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM28.getTime(), new ArrayList<Float>());
+			mapeoPromedios.put(tiempoM29.getTime(), new ArrayList<Float>());
+			
+			Calendar fechaC = Calendar.getInstance();
+			SimpleDateFormat formateador = AdminTabla.formateador;
+			
+			try {
+				for(String dato: datosTabla) {
+					String[] tokens = dato.split(",");
+					Date fecha = formateador.parse(tokens[0]);
+					fechaC.setTime(fecha);
+					Float porcentaje = (Float.parseFloat(tokens[1]))/100;
+					//Comparo con -29 dias para quedarme con los datos que estan dentro del ultimo mes
+					//Despues con el resto en intervalos de 1 dia
+					if(tiempoM30.compareTo(fechaC) <= 0) {
+						if(tiempoM29.compareTo(fechaC) >= 0) {
+							mapeoPromedios.get(tiempoM29.getTime()).add(porcentaje);
+						}
+						else {
+							if(tiempoM28.compareTo(fechaC) >= 0) {
+								mapeoPromedios.get(tiempoM28.getTime()).add(porcentaje);
+							}
+							else {
+								if(tiempoM27.compareTo(fechaC) >= 0) {
+									mapeoPromedios.get(tiempoM27.getTime()).add(porcentaje);
+								}
+								else {
+									if(tiempoM26.compareTo(fechaC) >= 0) {
+										mapeoPromedios.get(tiempoM26.getTime()).add(porcentaje);
+									}
+									else {
+										if(tiempoM25.compareTo(fechaC) >= 0) {
+											mapeoPromedios.get(tiempoM25.getTime()).add(porcentaje);
+										}
+										else {
+											if(tiempoM24.compareTo(fechaC) >= 0) {
+												mapeoPromedios.get(tiempoM24.getTime()).add(porcentaje);
+											}
+											else {
+												if(tiempoM23.compareTo(fechaC) >= 0) {
+													mapeoPromedios.get(tiempoM23.getTime()).add(porcentaje);
+												}
+												else {
+													if(tiempoM22.compareTo(fechaC) >= 0) {
+														mapeoPromedios.get(tiempoM22.getTime()).add(porcentaje);
+													}
+													else {
+														if(tiempoM21.compareTo(fechaC) >= 0) {
+															mapeoPromedios.get(tiempoM21.getTime()).add(porcentaje);
+														}
+														else {
+															if(tiempoM20.compareTo(fechaC) >= 0) {
+																mapeoPromedios.get(tiempoM20.getTime()).add(porcentaje);
+															}
+															else {
+																if(tiempoM19.compareTo(fechaC) >= 0) {
+																	mapeoPromedios.get(tiempoM19.getTime()).add(porcentaje);
+																}
+																else {
+																	if(tiempoM18.compareTo(fechaC) >= 0) {
+																		mapeoPromedios.get(tiempoM18.getTime()).add(porcentaje);
+																	}
+																	else {
+																		if(tiempoM18.compareTo(fechaC) >= 0) {
+																			mapeoPromedios.get(tiempoM18.getTime()).add(porcentaje);
+																		}
+																		else {
+																			if(tiempoM17.compareTo(fechaC) >= 0) {
+																				mapeoPromedios.get(tiempoM17.getTime()).add(porcentaje);
+																			}
+																			else {
+																				if(tiempoM16.compareTo(fechaC) >= 0) {
+																					mapeoPromedios.get(tiempoM16.getTime()).add(porcentaje);
+																				}
+																				else {
+																					if(tiempoM15.compareTo(fechaC) >= 0) {
+																						mapeoPromedios.get(tiempoM15.getTime()).add(porcentaje);
+																					}
+																					else {
+																						if(tiempoM14.compareTo(fechaC) >= 0) {
+																							mapeoPromedios.get(tiempoM14.getTime()).add(porcentaje);
+																						}
+																						else {
+																							if(tiempoM13.compareTo(fechaC) >= 0) {
+																								mapeoPromedios.get(tiempoM13.getTime()).add(porcentaje);
+																							}
+																							else {
+																								if(tiempoM12.compareTo(fechaC) >= 0) {
+																									mapeoPromedios.get(tiempoM12.getTime()).add(porcentaje);
+																								}
+																								else {
+																									if(tiempoM11.compareTo(fechaC) >= 0) {
+																										mapeoPromedios.get(tiempoM11.getTime()).add(porcentaje);
+																									}
+																									else {
+																										if(tiempoM10.compareTo(fechaC) >= 0) {
+																											mapeoPromedios.get(tiempoM10.getTime()).add(porcentaje);
+																										}
+																										else {
+																											if(tiempoM9.compareTo(fechaC) >= 0) {
+																												mapeoPromedios.get(tiempoM9.getTime()).add(porcentaje);
+																											}
+																											else {
+																												if(tiempoM8.compareTo(fechaC) >= 0) {
+																													mapeoPromedios.get(tiempoM8.getTime()).add(porcentaje);
+																												}
+																												else {
+																													if(tiempoM7.compareTo(fechaC) >= 0) {
+																														mapeoPromedios.get(tiempoM7.getTime()).add(porcentaje);
+																													}
+																													else {
+																														if(tiempoM6.compareTo(fechaC) >= 0) {
+																															mapeoPromedios.get(tiempoM6.getTime()).add(porcentaje);
+																														}
+																														else {
+																															if(tiempoM5.compareTo(fechaC) >= 0) {
+																																mapeoPromedios.get(tiempoM5.getTime()).add(porcentaje);
+																															}
+																															else {
+																																if(tiempoM4.compareTo(fechaC) >= 0) {
+																																	mapeoPromedios.get(tiempoM4.getTime()).add(porcentaje);
+																																}
+																																else {
+																																	if(tiempoM3.compareTo(fechaC) >= 0) {
+																																		mapeoPromedios.get(tiempoM3.getTime()).add(porcentaje);
+																																	}
+																																	else {
+																																		if(tiempoM2.compareTo(fechaC) >= 0) {
+																																			mapeoPromedios.get(tiempoM2.getTime()).add(porcentaje);
+																																		}
+																																		else {
+																																			if(tiempoM1.compareTo(fechaC) >= 0) {
+																																				mapeoPromedios.get(tiempoM1.getTime()).add(porcentaje);
+																																			}
+																																			else {
+																																				if(tiempo.compareTo(fechaC) >= 0) {
+																																					mapeoPromedios.get(tiempo.getTime()).add(porcentaje);
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				
+				ArrayList<Date> fechasGrafico = new ArrayList<Date>();
+				ArrayList<Float> promedioGrafico = new ArrayList<Float>();
+				for(Entry<Date, List<Float>> entry: mapeoPromedios.entrySet()) {
+					if(entry.getValue().size() != 0) {
+						fechasGrafico.add(entry.getKey());
+						float acumulador = 0;
+						for(Float i: entry.getValue()) {
+							acumulador += i;
+						}
+						promedioGrafico.add(acumulador/entry.getValue().size());
+					}
+					
+				}
+				
+				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Nivel promedio último mes - "+ nombre));
 				
 				
 			} catch (ParseException e) {

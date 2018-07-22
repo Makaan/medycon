@@ -23,21 +23,16 @@ public class Conexion {
 	private PrintWriter writer;
 	private BufferedReader reader;
 	
-	public Conexion(String ip, String puerto, String id, String tiempo) {
+	public Conexion(String ip, String puerto, String id, String tiempo) throws IOException {
 		this.ip = ip;
 		this.puerto = Integer.parseInt(puerto);
 		this.id = id;
 		this.tiempo = Integer.parseInt(tiempo)/2;
 		
-		try {
 		socket = new Socket(this.ip, this.puerto);
         	
         writer = new PrintWriter(socket.getOutputStream(), true);
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		}
-		catch (IOException e) {
-			adminMensajes.mostrarMensajeError("Error al conectarse con el dispositivo en ip: "+ip+":"+puerto);
-		}
 	}
 	
 	public String consultarEstado() {

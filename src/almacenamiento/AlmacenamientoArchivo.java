@@ -27,14 +27,16 @@ public class AlmacenamientoArchivo {
 		this.nombreArchivo = dir + nombreArchivo;
 		System.out.println(dir+nombreArchivo);
 		archivo = new File(this.nombreArchivo);
+		System.out.println(archivo.getPath());
 		
         try {
-        	if(!archivo.getParentFile().exists())
-        		archivo.mkdirs();
+        	System.out.println("Existe carpeta "+archivo.getParentFile().exists());
+        	archivo.getParentFile().mkdirs();
         	//Si el archivo no existe lo crea.
-        	if(!archivo.exists()) {
-    			archivo.createNewFile();
-    		}
+        	System.out.println("Existe carpeta "+archivo.getParentFile().exists());
+        	System.out.println("Existe archivo "+archivo.exists());
+    		archivo.createNewFile();
+        	System.out.println("Existe archivo "+archivo.exists());
         	
         }  
         catch(IOException ex) {
@@ -49,6 +51,7 @@ public class AlmacenamientoArchivo {
 			writer.close();
 		}
 		catch(IOException ex) {
+			ex.printStackTrace();
 			adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
 	    }
 		
@@ -71,9 +74,11 @@ public class AlmacenamientoArchivo {
         }
         
         catch(FileNotFoundException ex) {
+        	ex.printStackTrace();
         	adminMensajes.mostrarMensajeError("No se pudo abrir el archivo'" + nombreArchivo + "'");                
         }
         catch(IOException ex) {
+        	ex.printStackTrace();
         	adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
         }
 		return conexiones;
@@ -89,6 +94,7 @@ public class AlmacenamientoArchivo {
 			}
 		}
 		catch(IOException ex) {
+			ex.printStackTrace();
 			adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
 	    }
 		
@@ -108,6 +114,7 @@ public class AlmacenamientoArchivo {
         	
         }  
         catch(IOException ex) {
+        	ex.printStackTrace();
         	adminMensajes.mostrarMensajeError( "Error al leer el archivo '" + nombreArchivo + "'");                  
         }
         

@@ -9,36 +9,39 @@ import java.util.Vector;
 public class AlmacenamientoConexiones {
 	
 
-	private final String NOMBRE_ARCHIVO = "conexiones.txt";
+	private final String NOMBRE_ARCHIVO = "conexiones";
 	private AlmacenamientoArchivo almacenamientoArchivo;
 	
 	public AlmacenamientoConexiones() {
 		almacenamientoArchivo = new AlmacenamientoArchivo(NOMBRE_ARCHIVO);
     }
 	
-	public void guardarConexion(String nombre, String ip, String puerto, String id, String tiempo) {
+	public void guardarConexion(String nombre, String ip, String puerto, String id, String tiempo, String alarmaMin, String alarmaMax) {
 		Map<String, Vector<String>> mapeoConexiones = getConexiones();
 		if(mapeoConexiones.get(nombre) == null) {
-			String conexion = nombre+","+ip+","+puerto+","+id+","+tiempo;
+			String conexion = nombre+","+ip+","+puerto+","+id+","+tiempo+","+alarmaMin+","+alarmaMax;
 			almacenamientoArchivo.guardarEntrada(conexion);
 		}
 		
 	}
 	
-	public Vector<String> getConexion(String nombre) {
-		Vector<String> vectorDatos = new Vector<String>();
+	public Map<String, String> getConexion(String nombre) {
+		Map<String, String> mapeoDatos = new HashMap<String, String>();
 		List<String> listaConexiones = almacenamientoArchivo.getEntradas();
 		for(String conexion : listaConexiones) {
 			String[] tokens = conexion.split(",");
 			String nombreConexion = tokens[0];
 			if(nombreConexion.equals(nombre)) {
-				vectorDatos.add(tokens[1]); //IP
-				vectorDatos.add(tokens[2]); //Puerto
-				vectorDatos.add(tokens[3]); //ID
-				vectorDatos.add(tokens[4]); //tiempo
+				mapeoDatos.put("nombre", tokens[0]);
+				mapeoDatos.put("ip", tokens[1]);
+				mapeoDatos.put("puerto", tokens[2]);
+				mapeoDatos.put("id", tokens[3]);
+				mapeoDatos.put("tiempo", tokens[4]);
+				mapeoDatos.put("alarmaMin", tokens[5]);
+				mapeoDatos.put("alarmaMax", tokens[6]);
 			}
 		}
-		return vectorDatos;
+		return mapeoDatos;
 	}
 	
 	public Map<String, Vector<String>> getConexiones() {
@@ -57,7 +60,7 @@ public class AlmacenamientoConexiones {
 		return mapeoConexiones;
 	}
 	
-	public void editarConexion(String nombreViejo, String nombreConexion, String ip, String puerto, String id, String tiempo) {
+	public void editarConexion(String nombreViejo, String nombreConexion, String ip, String puerto, String id, String tiempo, String alarmaMin, String alarmaMax) {
 		Map<String, Vector<String>> conexiones = getConexiones();
 		conexiones.remove(nombreViejo);
 		
@@ -66,7 +69,19 @@ public class AlmacenamientoConexiones {
 			Vector<String> datos = conexion.getValue();
 			almacenamientoArchivo.guardarEntrada(conexion.getKey()+","+datos.get(0)+","+datos.get(1)+","+datos.get(2)+","+datos.get(3));
 		}
-		almacenamientoArchivo.guardarEntrada(nombreConexion+","+ip+","+puerto+","+id+","+tiempo);
+		guardarConexion(nombreConexion, ip, puerto, id, tiempo, alarmaMin, alarmaMax);
 
+	}
+
+	public void eliminarConexion(String nombreConexion) {
+		Map<String, Vector<String>> conexiones = getConexiones();
+		conexiones.remove(nombreConexion);
+		
+		almacenamientoArchivo.borrarEntradas();
+		for(Entry<String, Vector<String>> conexion: conexiones.entrySet()) {
+			Vector<String> datos = conexion.getValue();
+			almacenamientoArchivo.guardarEntrada(conexion.getKey()+","+datos.get(0)+","+datos.get(1)+","+datos.get(2)+","+datos.get(3));
+		}
+		
 	}
 }

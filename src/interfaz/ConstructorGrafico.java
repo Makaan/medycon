@@ -20,13 +20,13 @@ public class ConstructorGrafico {
 	public static XYChart getChart(ArrayList<Date> xData, ArrayList<Float> yData, String title) {
 		
 		// Create Chart
-	    XYChart chart = new XYChartBuilder().width(800).height(600).title(title).xAxisTitle("Fecha").yAxisTitle("Altura").build();
+	    XYChart chart = new XYChartBuilder().width(800).height(600).title(title).xAxisTitle("Fecha").yAxisTitle("Nivel").build();
 	 
 	    // Customize Chart
 	    setEstilo(chart);
 	 
 	    // Series
-	    XYSeries series = chart.addSeries("Altura", xData, yData);
+	    XYSeries series = chart.addSeries("Nivel", xData, yData);
 	    setEstiloSerie(series);
 	    
 	 
@@ -51,7 +51,7 @@ public class ConstructorGrafico {
 		styler.setPlotGridLinesVisible(false);
 		styler.setLegendPosition(LegendPosition.InsideSE);
 		styler.setLegendSeriesLineLength(12);
-		styler.setDatePattern("h:mm a");
+		styler.setDatePattern("E dd - h:mm a");
 		styler.setDecimalPattern("% ");
 		styler.setYAxisMax(1.0);
 		styler.setYAxisMin(0.0);

@@ -18,6 +18,8 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ListSelectionEvent;
@@ -36,6 +38,8 @@ import controlador.Controlador;
 public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, InfoGUI, GraficoGUI{
 	
 	private final Color COLOR_AGUA = new Color(90,188,216);
+	private final Color COLOR_VERDE = new Color(0x04B404);
+	private final Color COLOR_ROJO = new Color(0xDF0101);
 
     private static final long serialVersionUID = 1L;
     
@@ -57,6 +61,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     private JLabel lblNivel;
     private JComboBox<String> comboBoxTipoNivel;
     private JProgressBar progressBarAbsolutoGrafico;
+    private JList<String> listaConexiones;
     
     private JPanel panelGrafico;
     private JScrollPane scrollPane;
@@ -66,12 +71,10 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     
     Map<String, String> mapeoNiveles;
     
-    File soundFile = new File("res/snd/alert.mp3");
-    
 
     public Interfaz() {
     	
-    	this.setTitle("MedyCon");
+    	this.setTitle("MedyCon NUSV2.0");
     	
     	AdminMensajes.getInstancia().setInterfaz(this);
     	
@@ -92,7 +95,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         
         /* PANEL CONEXION */
 
-        panelConexion.setBorder(BorderFactory.createTitledBorder(eBorder, "Conexion"));
+        panelConexion.setBorder(BorderFactory.createTitledBorder(eBorder, "Conexión"));
         GridBagConstraints gbc_panelConexion = new GridBagConstraints();
         gbc_panelConexion.insets = new Insets(0, 0, 5, 5);
         gbc_panelConexion.gridx = gbc_panelConexion.gridy = 0;
@@ -110,7 +113,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         	for(String nombre: adminConexiones.getNombreConexiones()) {
         		listaModel.addElement(nombre);
         	}
-	        JList<String> listaConexiones = new JList<String>(listaModel);
+        	listaConexiones = new JList<String>(listaModel);
 	        listaConexiones.addListSelectionListener( new ListSelectionListener() {
 
 				@Override
@@ -132,9 +135,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        
 	        GridBagConstraints gbc_scrollListaConexiones = new GridBagConstraints();
 	        gbc_scrollListaConexiones.anchor = GridBagConstraints.NORTH;
-	        gbc_scrollListaConexiones.gridheight = 6;
+	        gbc_scrollListaConexiones.gridheight = 7;
 	        gbc_scrollListaConexiones.gridwidth = 2;
-	        gbc_scrollListaConexiones.weightx = 60;
+	        gbc_scrollListaConexiones.weightx = 65;
 	        gbc_scrollListaConexiones.fill = GridBagConstraints.BOTH;
 	        gbc_scrollListaConexiones.insets = new Insets(10, 10, 10, 10);
 	        gbc_scrollListaConexiones.gridx = 1;
@@ -166,7 +169,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					controlador.cerrarConexion(listaConexiones.getSelectedValue());
+					if(conexionSeleccionada != null) {
+						controlador.cerrarConexion(listaConexiones.getSelectedValue());
+					}
 				}
 	        	
 	        });
@@ -178,7 +183,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        gbc_btnDesconectar.weightx = 25;
 	        panelConexion.add(btnDesconectar, gbc_btnDesconectar);
 	        
-	        JButton btnNuevaConexion = new JButton("Nueva Conexion");
+	        JButton btnNuevaConexion = new JButton("Nueva Conexión");
 	        JTextField nombre = new JTextField();
         	JTextField ip = new JTextField();
         	JTextField puerto = new JTextField();
@@ -186,19 +191,19 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         	
         	Object[] message = {
         	    "Nombre:", nombre,
-        	    "ip:", ip,
-        	    "puerto", puerto,
-        	    "id:", id
+        	    "IP:", ip,
+        	    "Puerto", puerto,
+        	    "ID:", id
         	    
         	};
 	        btnNuevaConexion.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					int option = JOptionPane.showConfirmDialog(null, message, "Crear Nueva Conexion", JOptionPane.OK_CANCEL_OPTION);
+					int option = JOptionPane.showConfirmDialog(null, message, "Crear Nueva Conexión", JOptionPane.OK_CANCEL_OPTION);
 		        	if (option == JOptionPane.OK_OPTION) {
 		        		if(!nombre.getText().equals("") || !ip.getText().equals("") || !id.getText().equals("") || !puerto.getText().equals("")) {
 		        			if (isValidIP(ip.getText())) {
-			        	        adminConexiones.guardarConexion(nombre.getText(), ip.getText(), puerto.getText(), id.getText(), "30000");
+			        	        adminConexiones.guardarConexion(nombre.getText(), ip.getText(), puerto.getText(), id.getText(), "30000", "-1", "-1");
 			        	        ListModel<String> listModel = listaConexiones.getModel();
 			        	        ((DefaultListModel<String>) listModel).addElement(nombre.getText());
 			        	    } else {
@@ -220,7 +225,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        gbc_btnNuevaConexion.weightx = 25;
 	        panelConexion.add(btnNuevaConexion, gbc_btnNuevaConexion);
 	        
-	        JButton btnEditarConexion = new JButton("EditarConexion");
+	        JButton btnEditarConexion = new JButton("Editar Conexión");
 	        
 	        JTextField nombreEdit = new JTextField();
         	JTextField ipEdit = new JTextField();
@@ -228,10 +233,9 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         	JTextField idEdit = new JTextField();
         	Object[] editar = {
         	    "Nombre:", nombreEdit,
-        	    "ip:", ipEdit,
-        	    "puerto", puertoEdit,
-        	    "id:", idEdit
-        	    
+        	    "IP:", ipEdit,
+        	    "Puerto", puertoEdit,
+        	    "ID:", idEdit
         	};
 	        btnEditarConexion.addActionListener(new ActionListener() {
 	        	
@@ -239,13 +243,13 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(conexionSeleccionada != null) {
-						Vector<String> datosConexion = AdminConexiones.getInstancia().getConexion(conexionSeleccionada);
+						Map<String, String> datosConexion = AdminConexiones.getInstancia().getConexion(conexionSeleccionada);
 						nombreEdit.setText(conexionSeleccionada);
-						ipEdit.setText(datosConexion.get(0));
-						puertoEdit.setText(datosConexion.get(1));
-						idEdit.setText(datosConexion.get(2));
+						ipEdit.setText(datosConexion.get("ip"));
+						puertoEdit.setText(datosConexion.get("puerto"));
+						idEdit.setText(datosConexion.get("id"));
 						
-						int option = JOptionPane.showConfirmDialog(null, editar, "Editar Conexion", JOptionPane.OK_CANCEL_OPTION);
+						int option = JOptionPane.showConfirmDialog(null, editar, "Editar Conexión", JOptionPane.OK_CANCEL_OPTION);
 			        	if (option == JOptionPane.OK_OPTION) {
 			        		if(!nombreEdit.getText().equals("") || !ipEdit.getText().equals("") || !idEdit.getText().equals("") || !puertoEdit.getText().equals("")) {
 			        			if (isValidIP(ipEdit.getText())) {
@@ -281,25 +285,52 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        gbc_btnEditarConexion.weightx = 25;
 	        panelConexion.add(btnEditarConexion, gbc_btnEditarConexion);
 	        
-	        JButton btnVelocidadMuestreo = new JButton("Velocidad de Muestreo");
+	        JButton btnEliminarConexion = new JButton("Eliminar conexion");
+	        btnEliminarConexion.addActionListener(new ActionListener() {
+	        	
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(conexionSeleccionada != null) {
+						if (JOptionPane.showConfirmDialog(null, "¿Está seguro que quiere eliminar esta conexión?", "ADVERTENCIA",
+						        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+						    controlador.eliminarConexion(conexionSeleccionada);
+						}
+					}
+				}
+			});
+	        GridBagConstraints gbc_btnEliminarConexion = new GridBagConstraints();
+	        gbc_btnEliminarConexion.fill = GridBagConstraints.BOTH;
+	        gbc_btnEliminarConexion.insets = new Insets(0, 0, 5, 5);
+	        gbc_btnEliminarConexion.gridx = 0;
+	        gbc_btnEliminarConexion.gridy = 4;
+	        panelConexion.add(btnEliminarConexion, gbc_btnEliminarConexion);
+	        
+	        JButton btnVelocidadMuestreo = new JButton("Tiempo de Muestreo");
 	        btnVelocidadMuestreo.addActionListener(new ActionListener() {
-	        	JTextField velocidad = new JTextField();
+	        	
+	        	JTextField tiempo = new JTextField();
 	        	Object[] message = {
-	            	    "Velocidad en segundos:", velocidad
+	            	    "Tiempo en segundos:", tiempo
 	        	};
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					int option = JOptionPane.showConfirmDialog(null, message, "Modificar la velocidad de muestreo", JOptionPane.OK_CANCEL_OPTION);
-		        	if (option == JOptionPane.OK_OPTION) {
-		        		if(!velocidad.getText().equals("")) {
-		        			controlador.modificarVelocidadMuestreo(velocidad.getText()+"000", listaConexiones.getSelectedValue());
-		        		}
-		        		else {
-		        			mostrarMensajeError("Se deben completar todos los campos");
-		        		}
-		        	    
-		        	}
+					Map<String, String> datosConexion = AdminConexiones.getInstancia().getConexion(conexionSeleccionada);
+					String tmp = datosConexion.get("tiempo");
+					tiempo.setText(tmp.substring(0, tmp.length()-3));
+					
+					if(conexionSeleccionada != null) {
+						int option = JOptionPane.showConfirmDialog(null, message, "Modificar la velocidad de muestreo", JOptionPane.OK_CANCEL_OPTION);
+			        	if (option == JOptionPane.OK_OPTION) {
+			        		if(!tiempo.getText().equals("")) {
+			        			controlador.modificarVelocidadMuestreo(tiempo.getText()+"000", listaConexiones.getSelectedValue());
+			        		}
+			        		else {
+			        			mostrarMensajeError("Se deben completar todos los campos");
+			        		}
+			        	    
+			        	}
+					}
 				}
 	        	
 	        });
@@ -307,9 +338,50 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        gbc_btnVelocidadMuestreo.fill = GridBagConstraints.BOTH;
 	        gbc_btnVelocidadMuestreo.insets = new Insets(0, 0, 5, 5);
 	        gbc_btnVelocidadMuestreo.gridx = 0;
-	        gbc_btnVelocidadMuestreo.gridy = 4;
+	        gbc_btnVelocidadMuestreo.gridy = 5;
 	        gbc_btnVelocidadMuestreo.weightx = 25;
 	        panelConexion.add(btnVelocidadMuestreo, gbc_btnVelocidadMuestreo);
+	        
+	        JButton btnConfigurarAlarma = new JButton("Configurar Alarma");
+	        btnConfigurarAlarma.addActionListener(new ActionListener() {
+	        	JTextField nivelMinimo = new JTextField();
+	        	JTextField nivelMaximo = new JTextField();
+	        	Object[] message = {
+	        			"(Si los casilleros se dejan vacio se eliminan las alarmas)",
+	            	    "Nivel mínimo (%): ", nivelMinimo,
+	            	    "Nivel máximo (%): ", nivelMaximo
+	        	};
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(conexionSeleccionada != null) {
+						Map<String, String> datosConexion = AdminConexiones.getInstancia().getConexion(conexionSeleccionada);
+						nivelMinimo.setText(datosConexion.get("alarmaMin"));
+						nivelMaximo.setText(datosConexion.get("alarmaMax"));
+						if(nivelMinimo.getText().equals("-1")) {
+							nivelMinimo.setText("");
+						}
+						if(nivelMaximo.getText().equals("-1")) {
+							nivelMaximo.setText("");
+						}
+						int option = JOptionPane.showConfirmDialog(null, message, "Configurar alarma de nivel", JOptionPane.OK_CANCEL_OPTION);
+			        	if (option == JOptionPane.OK_OPTION) {
+			        			controlador.configurarAlarma(listaConexiones.getSelectedValue(), nivelMinimo.getText(), nivelMaximo.getText());
+			        	}
+					}
+				}
+	        	
+	        });
+	        GridBagConstraints gbc_btnConfigurarAlarma = new GridBagConstraints();
+	        gbc_btnConfigurarAlarma.fill = GridBagConstraints.BOTH;
+	        gbc_btnConfigurarAlarma.insets = new Insets(0, 0, 5, 5);
+	        gbc_btnConfigurarAlarma.gridx = 0;
+	        gbc_btnConfigurarAlarma.gridy = 6;
+	        gbc_btnConfigurarAlarma.weightx = 25;
+	        panelConexion.add(btnConfigurarAlarma, gbc_btnConfigurarAlarma);
+	        
+	        
+	        
 	        
         /* PANEL INFO */
 
@@ -489,7 +561,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 			        gbc_lblReferenciaLlenoGrafico.gridy = 3;
 			        panelReferencia.add(lblReferenciaLLenoGrafico, gbc_lblReferenciaLlenoGrafico);
 			        
-			        JLabel lblReferenciaLimiteExcedido = new JLabel("Limite Excedido");
+			        JLabel lblReferenciaLimiteExcedido = new JLabel("Límite Excedido");
 			        GridBagConstraints gbc_lblReferenciaLimiteExcedido = new GridBagConstraints();
 			        gbc_lblReferenciaLimiteExcedido.insets = new Insets(0, 0, 5, 0);
 			        gbc_lblReferenciaLimiteExcedido.gridx = 0;
@@ -531,7 +603,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 			    panelRele1.setLayout(new GridBagLayout());
 			    panelReles.add(panelRele1, gbc_panelRele1);
 			    
-				    JLabel lblNivelRele1 = new JLabel("Nivel Rele 1");
+				    JLabel lblNivelRele1 = new JLabel("Estado Bomba 1");
 			        GridBagConstraints gbc_lblNivelRele1 = new GridBagConstraints();
 			        gbc_lblNivelRele1.insets = new Insets(0, 0, 5, 0);
 			        gbc_lblNivelRele1.gridwidth = 2;
@@ -600,7 +672,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 			    panelRele2.setLayout(new GridBagLayout());
 			    panelReles.add(panelRele2, gbc_panelRele2);
 			    
-				    JLabel lblNivelRele2 = new JLabel("Nivel Rele 2");
+				    JLabel lblNivelRele2 = new JLabel("Estado Bomba 2");
 			        GridBagConstraints gbc_lblNivelRele2 = new GridBagConstraints();
 			        gbc_lblNivelRele2.insets = new Insets(0, 0, 5, 0);
 			        gbc_lblNivelRele2.gridwidth = 2;
@@ -660,7 +732,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         /* PANEL DATOS */
 
         JPanel panelDatos = new JPanel();
-        panelDatos.setBorder(BorderFactory.createTitledBorder(eBorder, "Datos de Comuncacion"));
+        panelDatos.setBorder(BorderFactory.createTitledBorder(eBorder, "Datos de Comunicación"));
         GridBagConstraints gbc_panelDatos = new GridBagConstraints();
         gbc_panelDatos.fill = GridBagConstraints.BOTH;
         gbc_panelDatos.anchor = GridBagConstraints.NORTHWEST;
@@ -716,7 +788,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        
 	    panelContenedorGrafico = new JPanel();
 	    
-	    panelContenedorGrafico.setBorder(BorderFactory.createTitledBorder(eBorder, "Grafico de Consumo"));
+	    panelContenedorGrafico.setBorder(BorderFactory.createTitledBorder(eBorder, "Gráfico de Consumo"));
         GridBagConstraints gbc_panelContenedorGrafico = new GridBagConstraints();
         gbc_panelContenedorGrafico.fill = GridBagConstraints.BOTH;
         gbc_panelContenedorGrafico.anchor = GridBagConstraints.NORTHWEST;
@@ -735,6 +807,18 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        
 	        JPanel panelBotonesGrafico = new JPanel();
 	        panelContenedorGrafico.add(panelBotonesGrafico, BorderLayout.SOUTH);
+	        
+		        JButton botonGraficoMes = new JButton("Mensual");
+		        botonGraficoMes.addActionListener(new ActionListener() {
+	
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						controlador.graficarMes(listaConexiones.getSelectedValue());
+						
+					}
+	        		
+	        	});
+		        panelBotonesGrafico.add(botonGraficoMes);
 	        
 	        	JButton botonGraficoSemana = new JButton("Semanal");
 	        	botonGraficoSemana.addActionListener(new ActionListener() {
@@ -760,7 +844,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        	});
 	        	panelBotonesGrafico.add(botonGraficoDia);
 	        	
-	        	JButton botonGraficoHora = new JButton("Ultima hora");
+	        	JButton botonGraficoHora = new JButton("Última hora");
 	        	botonGraficoHora.addActionListener(new ActionListener() {
 
 					@Override
@@ -807,7 +891,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				item.setOpaque(true);
 				
 				if(controlador.estaConectado(value)) {
-					item.setForeground(Color.green);
+					item.setForeground(COLOR_VERDE);
 				}
 				if(isSelected) {
 					item.setBackground(Color.LIGHT_GRAY);
@@ -816,18 +900,16 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 			}
         	
         });
-        
         SystemTray tray = SystemTray.getSystemTray();
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = new ImageIcon(getClass().getResource("/res/img/logo.png")).getImage();
-    
+        Image image = new ImageIcon(getClass().getClassLoader().getResource("res/img/logo.png")).getImage();
+        setIconImage(image);
 
         PopupMenu menu = new PopupMenu();
 
         MenuItem messageItem = new MenuItem("About");
         messageItem.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(null, "MedyCon 2018");
+            JOptionPane.showMessageDialog(null, "MedyCon NUSV2.0");
           }
         });
         menu.add(messageItem);
@@ -854,7 +936,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         try {
 			tray.add(icon);
 		} catch (AWTException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
     }
@@ -879,17 +960,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     
 
 	public void mostrarMensajeError(String msg) {
-		// Open an audio input stream.           
-		try {
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);              
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioIn);
-			clip.start();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-       
 		JOptionPane.showMessageDialog(null,msg, "Error", JOptionPane.ERROR_MESSAGE);
 		
 	}
@@ -946,21 +1016,21 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	    String rele1 = datos.get("Rele1");
 	    if(rele1.equals("0")) {
 	    	lblNivelRele1Grafico.setText("OFF");
-	    	lblNivelRele1Grafico.setBackground(Color.RED);
+	    	lblNivelRele1Grafico.setBackground(COLOR_ROJO);
 	    }
 	    else {
 	    	lblNivelRele1Grafico.setText("ON");
-	    	lblNivelRele1Grafico.setBackground(Color.GREEN);
+	    	lblNivelRele1Grafico.setBackground(COLOR_VERDE);
 	    }
 	    
 	    String rele2 = datos.get("Rele2");
 	    if(rele2.equals("0")) {
 	    	lblNivelRele2Grafico.setText("OFF");
-	    	lblNivelRele2Grafico.setBackground(Color.RED);
+	    	lblNivelRele2Grafico.setBackground(COLOR_ROJO);
 	    }
 	    else {
 	    	lblNivelRele2Grafico.setText("ON");
-	    	lblNivelRele2Grafico.setBackground(Color.GREEN);
+	    	lblNivelRele2Grafico.setBackground(COLOR_VERDE);
 	    }
 	}
 
@@ -971,6 +1041,11 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 		panelContenedorGrafico.add(panelGrafico, BorderLayout.CENTER);
 		panelContenedorGrafico.validate();
 		panelContenedorGrafico.repaint();
+	}
+
+	public void eliminarConexion(String nombreConexion) {
+		((DefaultListModel<String>) listaConexiones.getModel()).removeElement(nombreConexion);
+		
 	}
 	
 	

@@ -7,9 +7,11 @@
 /home/makaan/eclipse-workspace/medycon/src/interfaz/TablaGUI.java
 /home/makaan/eclipse-workspace/medycon/src/interfaz/ConstructorGrafico.java
 /home/makaan/eclipse-workspace/medycon/src/interfaz/Interfaz.java
+/home/makaan/eclipse-workspace/medycon/src/controlador/DatosMensaje.java
 /home/makaan/eclipse-workspace/medycon/src/interfaz/GraficoGUI.java
 /home/makaan/eclipse-workspace/medycon/src/interfaz/MensajesGUI.java
 /home/makaan/eclipse-workspace/medycon/src/almacenamiento/EscritorExcel.java
+/home/makaan/eclipse-workspace/medycon/src/controlador/AlarmaNivel.java
 /home/makaan/eclipse-workspace/medycon/src/controlador/AdminMensajes.java
 /home/makaan/eclipse-workspace/medycon/src/almacenamiento/AlmacenamientoArchivo.java
 /home/makaan/eclipse-workspace/medycon/src/controlador/AdminInfo.java

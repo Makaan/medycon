@@ -57,7 +57,7 @@ public class DatosMensaje {
             }
             else if(parametros[i].contains("2M"))
             {
-            	valor2M = parametros[i].replaceAll("2M", "").replaceAll(" ", "");
+            	valor2M = parametros[i].replaceAll("2M", "").replaceAll(" ", "").replaceAll(">", "");
             }
         }
 	}

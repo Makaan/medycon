@@ -25,18 +25,12 @@ public class AlmacenamientoArchivo {
 	
 	public AlmacenamientoArchivo(String nombreArchivo) {
 		this.nombreArchivo = dir + nombreArchivo;
-		System.out.println(dir+nombreArchivo);
 		archivo = new File(this.nombreArchivo);
-		System.out.println(archivo.getPath());
 		
         try {
-        	System.out.println("Existe carpeta "+archivo.getParentFile().exists());
         	archivo.getParentFile().mkdirs();
         	//Si el archivo no existe lo crea.
-        	System.out.println("Existe carpeta "+archivo.getParentFile().exists());
-        	System.out.println("Existe archivo "+archivo.exists());
     		archivo.createNewFile();
-        	System.out.println("Existe archivo "+archivo.exists());
         	
         }  
         catch(IOException ex) {

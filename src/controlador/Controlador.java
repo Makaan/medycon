@@ -1,7 +1,11 @@
 package controlador;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -102,10 +106,10 @@ public class Controlador {
 						DatosMensaje datos = new DatosMensaje(resu);
 						adminTabla.agregarFila(datos);
 						alarmaNivel.checkAlarma(nombreConexion, datos);
+						adminInfo.actualizarDatos(nombreConexion, datos);
 						if(nombreConexion.equals(conexionSeleccionada)) {
-							adminInfo.actualizarDatos(datos);
+							adminInfo.mostrarDatos(nombreConexion);
 						}
-						
 					}
 					
 				}
@@ -132,8 +136,43 @@ public class Controlador {
 	}
 
 	public void exportar(String nombreConexion, String nombreArchivo) {
-		if(mapAdminTablas.get(nombreConexion)!= null)
-			EscritorExcel.exportar(AdminTabla.getNombresColumnas(), mapAdminTablas.get(nombreConexion).getDatosTabla(), nombreArchivo);
+		if(mapAdminTablas.get(nombreConexion)!= null) {
+			
+			String[] nombres = AdminTabla.getNombresColumnas();
+			String[] nombresNuevos = new String[nombres.length+1];
+			nombresNuevos[0]= nombres[0];
+			nombresNuevos[1]= "HORA";
+			for(int i = 1; i < nombres.length; i++) {
+				nombresNuevos[i+1]= nombres[i];
+			}
+			
+			List<String> listaDatos = mapAdminTablas.get(nombreConexion).getDatosTabla();
+			
+			List<String> listaNueva = new LinkedList<String>();
+			
+			SimpleDateFormat formateadorHora = new SimpleDateFormat("HH:mm:ss"); 
+			SimpleDateFormat formateadorFecha = new SimpleDateFormat("dd-MMM-yyyy"); 
+			
+			for(String dato: listaDatos) {
+				String tokens[] = dato.split(",");
+				String resu = "";
+				try {
+					Date fecha = AdminTabla.formateador.parse(tokens[0]);
+					resu+= formateadorFecha.format(fecha)+",";
+					resu+= formateadorHora.format(fecha)+",";
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for(int i = 1; i < tokens.length; i++) {
+					resu+=tokens[i]+",";
+				}
+				listaNueva.add(resu);
+			}
+			
+			EscritorExcel.exportar(nombresNuevos, listaNueva, nombreArchivo);
+		}
+			
 	}
 	
 	public void graficarMes(String nombreConexion) {
@@ -189,8 +228,9 @@ public class Controlador {
 							DatosMensaje datos = new DatosMensaje(resu);
 							alarmaNivel.checkAlarma(nombreConexion, datos);
 							mapAdminTablas.get(nombreConexion).agregarFila(datos);
+							adminInfo.actualizarDatos(nombreConexion, datos);
 							if(nombreConexion.equals(conexionSeleccionada)) {
-								adminInfo.actualizarDatos(datos);
+								adminInfo.mostrarDatos(nombreConexion);
 							}
 							
 						}
@@ -208,6 +248,7 @@ public class Controlador {
 		if(mapAdminTablas.containsKey(nombreConexion)) {
 			mapAdminTablas.get(nombreConexion).actualizarDatosTabla();
 		}
+		adminInfo.mostrarDatos(nombreConexion);
 		graficarHora(nombreConexion);
 		
 	}
@@ -264,8 +305,8 @@ public class Controlador {
 		catch(NumberFormatException e) {
 			adminMensajes.mostrarMensajeError("El valor ingresado no es un numero entero valido");
 		}
-		if(min > 100 || max > 100) {
-			adminMensajes.mostrarMensajeError("El valor ingresado no puede exceder el 100%");
+		if(min > 105 || max > 105) {
+			adminMensajes.mostrarMensajeError("El valor ingresado no puede exceder el 105%");
 		}
 		if(min != -1 && max!=-1) {
 			if( min < 0 || max < 0) {
@@ -280,7 +321,13 @@ public class Controlador {
 		
 	}
 
-	
+	private String[] combine(String[] a, String[] b){
+        int length = a.length + b.length;
+        String[] result = new String[length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
 
 	
 

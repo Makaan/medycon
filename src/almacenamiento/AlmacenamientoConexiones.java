@@ -55,6 +55,8 @@ public class AlmacenamientoConexiones {
 			vectorDatos.add(tokens[2]); //puerto
 			vectorDatos.add(tokens[3]);	//id
 			vectorDatos.add(tokens[4]); //Tiempo
+			vectorDatos.add(tokens[5]); //Alarma min
+			vectorDatos.add(tokens[6]); //Alarma max
 			mapeoConexiones.put(nombre, vectorDatos);
 		}
 		return mapeoConexiones;
@@ -67,7 +69,13 @@ public class AlmacenamientoConexiones {
 		almacenamientoArchivo.borrarEntradas();
 		for(Entry<String, Vector<String>> conexion: conexiones.entrySet()) {
 			Vector<String> datos = conexion.getValue();
-			almacenamientoArchivo.guardarEntrada(conexion.getKey()+","+datos.get(0)+","+datos.get(1)+","+datos.get(2)+","+datos.get(3));
+			String datosConexion = conexion.getKey()+",";
+			for(String dato: datos) {
+				
+				datosConexion+= dato+",";
+			}
+			datosConexion = datosConexion.substring(0, datosConexion.length()-1);
+			almacenamientoArchivo.guardarEntrada(datosConexion);
 		}
 		guardarConexion(nombreConexion, ip, puerto, id, tiempo, alarmaMin, alarmaMax);
 

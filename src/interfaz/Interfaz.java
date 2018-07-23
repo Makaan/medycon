@@ -856,12 +856,12 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	        	});
 	        	panelBotonesGrafico.add(botonGraficoHora);
         
+	    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     	this.addWindowListener(new WindowAdapter(){
     	                public void windowClosing(WindowEvent e){
     	                	int reply = JOptionPane.showConfirmDialog(null, "¿Seguro que desea cerrar la aplicacion?", "Cerrar aplicacion", JOptionPane.YES_NO_OPTION);
-    	                    if (reply == JOptionPane.YES_OPTION) {
-    	                      //controlador.cerrarConexiones();
-    	                      System.exit(0);
+    	                	if (reply == JOptionPane.YES_OPTION) {
+    	                    	System.exit(0);
     	                    }
     	                        
     	                }
@@ -917,7 +917,10 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
         MenuItem closeItem = new MenuItem("Cerrar");
         closeItem.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            System.exit(0);
+        	  int reply = JOptionPane.showConfirmDialog(null, "¿Seguro que desea cerrar la aplicacion?", "Cerrar aplicacion", JOptionPane.YES_NO_OPTION);
+	          if (reply == JOptionPane.YES_OPTION) {
+	        	  System.exit(0);
+	          }
           }
         });
         menu.add(closeItem);

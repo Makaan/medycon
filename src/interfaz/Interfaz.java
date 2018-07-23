@@ -253,7 +253,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 			        	if (option == JOptionPane.OK_OPTION) {
 			        		if(!nombreEdit.getText().equals("") || !ipEdit.getText().equals("") || !idEdit.getText().equals("") || !puertoEdit.getText().equals("")) {
 			        			if (isValidIP(ipEdit.getText())) {
-			        				System.out.println(nombreEdit.getText());
 			        				controlador.editarConexion(conexionSeleccionada, nombreEdit.getText(), ipEdit.getText(), puertoEdit.getText(), idEdit.getText());
 			        				DefaultListModel<String> listaModel = new DefaultListModel<String>();
 			        	        	
@@ -775,8 +774,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 						JFileChooser c = new JFileChooser();
 						int rVal = c.showSaveDialog(null);
 						if (rVal == JFileChooser.APPROVE_OPTION) {
-					        System.out.println(c.getSelectedFile().getName());
-					        System.out.println(c.getCurrentDirectory().toString());
 					        controlador.exportar(conexionSeleccionada, c.getCurrentDirectory().toString()+"/"+c.getSelectedFile().getName());
 					      }
 					}
@@ -975,10 +972,13 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	
 	
 	@Override
-	public void actualizarDatosTabla(String[][] datos) {
-		tableModel = new DefaultTableModel(datos, AdminTabla.getNombresColumnas());
-		table.setModel(tableModel);
-		
+	public void actualizarDatosTabla(String nombre, String[][] datos) {
+		System.out.println(nombre == null);
+		System.out.println(conexionSeleccionada == null);
+		if(conexionSeleccionada != null && nombre.equals(conexionSeleccionada)) {
+			tableModel = new DefaultTableModel(datos, AdminTabla.getNombresColumnas());
+			table.setModel(tableModel);
+		}
 	}
 
 	@Override

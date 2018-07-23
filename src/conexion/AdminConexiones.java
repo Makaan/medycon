@@ -21,7 +21,6 @@ public class AdminConexiones {
 	}
 	
 	public void guardarConexion(String nombre, String ip, String puerto, String id, String tiempo, String alarmaMin, String alarmaMax) {
-		System.out.println(nombre+" "+ip+" "+puerto+" "+id+" "+tiempo+" "+alarmaMin+" "+alarmaMax);
 		almacenamiento.guardarConexion(nombre, ip, puerto, id, tiempo, alarmaMin, alarmaMax);
 	}
 	

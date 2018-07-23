@@ -24,11 +24,14 @@ public class AdminTabla {
             "BOMBA 2"};
 	
 	public AdminTabla(TablaGUI<String> interfaz, String identificador) {
+		
 		this.interfaz = interfaz; 
+		this.identificador = identificador;
+		System.out.println("new admintabla "+this.identificador);
+		
 		almacenamientoArchivo = new AlmacenamientoArchivo(identificador+"Tabla");
 		actualizarDatosTabla();
 		
-		this.identificador = identificador;
 		
 	}
 	
@@ -43,7 +46,7 @@ public class AdminTabla {
 			}
 			i++;
 		}
-		interfaz.actualizarDatosTabla(filasPrevias);	
+		interfaz.actualizarDatosTabla(identificador, filasPrevias);	
 		
 	}
 
@@ -102,7 +105,7 @@ public class AdminTabla {
 
 	public void borrarLista() {
 		almacenamientoArchivo.borrarEntradas();
-		interfaz.actualizarDatosTabla(new String[0][0]);
+		interfaz.actualizarDatosTabla(identificador, new String[0][0]);
 		
 	}
 

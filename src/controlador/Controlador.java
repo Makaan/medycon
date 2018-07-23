@@ -83,20 +83,21 @@ public class Controlador {
 	}
 	
 	public void nuevaConexion(String nombreConexion) {
+		System.out.println("nueva conexion "+nombreConexion);
 		Map<String, String> datosConexion = adminConexiones.getConexion(nombreConexion);
 		if(conexiones.containsKey(nombreConexion)) {
 			cerrarConexion(nombreConexion);
 			timers.get(nombreConexion).cancel();
 		}
 		
+		AdminTabla adminTabla = new AdminTabla(interfaz, nombreConexion);
+		mapAdminTablas.put(nombreConexion, adminTabla);
+		
 		Timer timer = new Timer();
 		try {
 			Conexion conexion = new Conexion(datosConexion.get("ip"), datosConexion.get("puerto"), datosConexion.get("id"), datosConexion.get("tiempo"));
 			conexiones.put(nombreConexion, conexion);
-			
-			AdminTabla adminTabla = new AdminTabla(interfaz, nombreConexion);
-			mapAdminTablas.put(nombreConexion, adminTabla);
-			
+
 			timer.scheduleAtFixedRate(new TimerTask() {
 
 				@Override
@@ -115,7 +116,6 @@ public class Controlador {
 				}
 				
 			}, 0, conexion.getTiempo());
-			System.out.println(timer);
 			timers.put(nombreConexion, timer);
 			
 			

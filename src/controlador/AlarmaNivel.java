@@ -73,12 +73,12 @@ public class AlarmaNivel {
 		if(alarmaMin != -1 && alarmaMin > porcentaje) {
 			clipAlertaMin.start();
 			clipAlertaMin.setFramePosition(0);
-			adminMensajes.mostrarMensajeInfo("El nivel porcentual del dispositivo "+nombreConexion+" esta por debajo de "+alarmaMin+" %");
+			//adminMensajes.mostrarMensajeInfo("El nivel porcentual del dispositivo "+nombreConexion+" esta por debajo de "+alarmaMin+" %");
 		}
 		if(alarmaMax != -1 && alarmaMax < porcentaje) {
 			clipAlertaMax.start();
 			clipAlertaMax.setFramePosition(0);
-			adminMensajes.mostrarMensajeInfo("El nivel porcentual del dispositivo "+nombreConexion+" esta por encima de "+alarmaMax	+" %");
+			//adminMensajes.mostrarMensajeInfo("El nivel porcentual del dispositivo "+nombreConexion+" esta por encima de "+alarmaMax	+" %");
 		}
 	}
 	

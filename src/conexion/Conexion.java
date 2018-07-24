@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import controlador.AdminMensajes;
 
@@ -16,17 +19,19 @@ public class Conexion {
 	private AdminMensajes adminMensajes = AdminMensajes.getInstancia();
 
 	private String ip;
-	private String id;
+	private Map<String, String> ids;
 	private int puerto;
 	private int tiempo;
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
 	
-	public Conexion(String ip, String puerto, String id, String tiempo) throws IOException {
+	
+	public Conexion(String nombreConexion, String ip, String puerto, String id, String tiempo) throws IOException {
 		this.ip = ip;
 		this.puerto = Integer.parseInt(puerto);
-		this.id = id;
+		this.ids = new HashMap<String, String>();
+		ids.put(nombreConexion, id);
 		this.tiempo = Integer.parseInt(tiempo)/2;
 		
 		socket = new Socket(this.ip, this.puerto);
@@ -35,8 +40,8 @@ public class Conexion {
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	}
 	
-	public String consultarEstado() {
-		writer.println("<"+id+"?ET>");
+	public String consultarEstado(String nombreConexion) {
+		writer.println("<"+ids.get(nombreConexion)+"?ET>");
 		String result = "";
 		try {
 			result = reader.readLine();
@@ -56,8 +61,35 @@ public class Conexion {
 		}
 	}
 	
+	public String getIp() {
+		return ip;
+	}
+	
+	public int getPuerto() {
+		return puerto;
+	}
+	
 	public Integer getTiempo() {
 		return tiempo;
+	}
+	
+	public String idToNombre(String id) {
+		String toReturn = null;
+		for(Entry<String, String> e: ids.entrySet()) {
+			if(e.getValue().equals(id)) {
+				toReturn = e.getKey();
+				break;
+			}
+		}
+		return toReturn;
+	}
+
+	public void setPuerto(int puerto) {
+		this.puerto = puerto;
+	}
+
+	public void addId(String nombre, String id) {
+		ids.put(nombre, id);
 	}
 	
 	public void setTiempo(Integer tiempo) {
@@ -65,6 +97,6 @@ public class Conexion {
 	}
 	
 	public String toString() {
-		return "Conexion: ip "+ip+" puerto "+puerto+" id "+id;
+		return "Conexion: ip "+ip+" puerto "+puerto+" id "+ids.values().toString();
 	}
 }

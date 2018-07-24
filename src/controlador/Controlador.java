@@ -93,25 +93,38 @@ public class Controlador {
 		mapAdminTablas.put(nombreConexion, adminTabla);
 		
 		Map<String, String> datosConexion = adminConexiones.getConexion(nombreConexion);
-		Conexion conexion = null;
-		try {
-			conexion = new Conexion(datosConexion.get("ip"), datosConexion.get("puerto"), datosConexion.get("id"), datosConexion.get("tiempo"));
-			conexiones.put(nombreConexion, conexion);
-			Integer tiempo = conexiones.get(nombreConexion).getTiempo();
-			TimerConexion timerConexion = new TimerConexion(this, nombreConexion, tiempo);
-			timers.put(nombreConexion, timerConexion);
-		} catch (IOException e) {
-			adminMensajes.mostrarMensajeError("Error al conectarse con el dispositivo: "+nombreConexion);
-			if(conexiones.containsKey(nombreConexion)) {
-				conexiones.remove(nombreConexion);
-				timers.get(nombreConexion).cancel();
-				timers.remove(nombreConexion);
-}
-			e.printStackTrace();
+		Conexion conexion = buscarConexionConIp(datosConexion.get("ip"));
+		if(conexion == null) {
+			try {
+				conexion = new Conexion(nombreConexion, datosConexion.get("ip"), datosConexion.get("puerto"), datosConexion.get("id"), datosConexion.get("tiempo"));
+			}
+			catch (IOException e) {
+				adminMensajes.mostrarMensajeError("Error al conectarse con el dispositivo: "+nombreConexion);
+				if(conexiones.containsKey(nombreConexion)) {
+					conexiones.remove(nombreConexion);
+					
+				}
+				if(timers.containsKey(nombreConexion)) {
+					timers.get(nombreConexion).cancel();
+					timers.remove(nombreConexion);
+				}
+				e.printStackTrace();
+			}
+			
 		}
+		else {
+			conexion.addId(nombreConexion, datosConexion.get("id"));
+		}
+		conexiones.put(nombreConexion, conexion);
+		Integer tiempo = conexiones.get(nombreConexion).getTiempo();
+		TimerConexion timerConexion = new TimerConexion(this, nombreConexion, tiempo);
+		timers.put(nombreConexion, timerConexion);
+		
 		
 		
 	}
+
+	
 
 	public String[] getNombresColumnas() {
 		return AdminTabla.getNombresColumnas();
@@ -290,33 +303,37 @@ public class Controlador {
 		
 	}
 
-	private String[] combine(String[] a, String[] b){
-        int length = a.length + b.length;
-        String[] result = new String[length];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
-    }
-
-
 	public void consultarEstado(String nombre) {
+		System.out.println("---");
+		System.out.println("consulta "+nombre);
 		Conexion conexion = conexiones.get(nombre);
 		
-		String resu = conexion.consultarEstado();
-		if(!resu.equals("")) {
+		String resu = conexion.consultarEstado(nombre);
+		if(!resu.equals("") && resu.charAt(0) == '<') {
 			DatosMensaje datos = new DatosMensaje(resu);
-			System.out.println("---");
+			String nombreReal = conexion.idToNombre(datos.getMiID());
 			System.out.println(conexion.toString());
-			System.out.println(resu+" "+nombre);
+			System.out.println(resu+" "+nombreReal);
 			System.out.println("---");
-			mapAdminTablas.get(nombre).agregarFila(datos);
-			alarmaNivel.checkAlarma(nombre, datos);
-			adminInfo.actualizarDatos(nombre, datos);
-			if(nombre.equals(conexionSeleccionada)) {
-				adminInfo.mostrarDatos(nombre);
+			mapAdminTablas.get(nombreReal).agregarFila(datos);
+			alarmaNivel.checkAlarma(nombreReal, datos);
+			adminInfo.actualizarDatos(nombreReal, datos);
+			if(nombreReal.equals(conexionSeleccionada)) {
+				adminInfo.mostrarDatos(nombreReal);
 			}
 		}
 		
+	}
+	
+	private Conexion buscarConexionConIp(String ip) {
+		Conexion encontre = null;
+		for(Conexion con: conexiones.values()) {
+			if(con.getIp().equals(ip)) {
+				encontre = con;
+				break;
+			}
+		}
+		return encontre;
 	}
 
 	

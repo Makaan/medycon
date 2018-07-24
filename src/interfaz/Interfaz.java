@@ -325,7 +325,13 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 						int option = JOptionPane.showConfirmDialog(null, message, "Modificar la velocidad de muestreo", JOptionPane.OK_CANCEL_OPTION);
 			        	if (option == JOptionPane.OK_OPTION) {
 			        		if(!tiempo.getText().equals("")) {
-			        			controlador.modificarVelocidadMuestreo(tiempo.getText()+"000", listaConexiones.getSelectedValue());
+			        			if(Integer.parseInt(tiempo.getText()) < 30) {
+			        				mostrarMensajeError("El tiempo de muestreo no puede ser menor a 30 segundos");
+			        			}
+			        			else {
+			        				controlador.modificarVelocidadMuestreo(tiempo.getText()+"000", listaConexiones.getSelectedValue());
+			        			}
+			        			
 			        		}
 			        		else {
 			        			mostrarMensajeError("Se deben completar todos los campos");

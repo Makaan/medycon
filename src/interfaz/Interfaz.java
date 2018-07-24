@@ -45,6 +45,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
     
     private final static AdminConexiones adminConexiones = AdminConexiones.getInstancia();
     
+    private JFrame frame = this;
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel panelConexion;
@@ -150,6 +151,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(listaConexiones.getSelectedValue() != null) {
+						listaConexiones.repaint();
 						String nombreConexion = listaConexiones.getSelectedValue().toString();
 						controlador.nuevaConexion(nombreConexion);
 					}
@@ -170,6 +172,7 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(conexionSeleccionada != null) {
+						listaConexiones.repaint();
 						controlador.cerrarConexion(listaConexiones.getSelectedValue());
 					}
 				}
@@ -973,8 +976,6 @@ public class Interfaz extends JFrame implements MensajesGUI, TablaGUI<String>, I
 	
 	@Override
 	public void actualizarDatosTabla(String nombre, String[][] datos) {
-		System.out.println(nombre == null);
-		System.out.println(conexionSeleccionada == null);
 		if(conexionSeleccionada != null && nombre.equals(conexionSeleccionada)) {
 			tableModel = new DefaultTableModel(datos, AdminTabla.getNombresColumnas());
 			table.setModel(tableModel);

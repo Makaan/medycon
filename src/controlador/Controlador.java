@@ -39,7 +39,7 @@ public class Controlador {
 	
 	private Map<String, AdminTabla> mapAdminTablas;
 	private Map<String, Conexion> conexiones;
-	private Map<String, Timer> timers;
+	private Map<String, TimerConexion> timers;
 	private String conexionSeleccionada;
 	
 	public Controlador(Interfaz interfaz, String conexionSeleccionada) {
@@ -47,7 +47,7 @@ public class Controlador {
 		
 		mapAdminTablas = new HashMap<String, AdminTabla>();
 		conexiones = new HashMap<String, Conexion>();
-		timers = new HashMap<String, Timer>();
+		timers = new HashMap<String, TimerConexion>();
 		alarmaNivel = new AlarmaNivel();
 		
 		this.conexionSeleccionada = conexionSeleccionada;
@@ -84,7 +84,6 @@ public class Controlador {
 	
 	public void nuevaConexion(String nombreConexion) {
 		System.out.println("nueva conexion "+nombreConexion);
-		Map<String, String> datosConexion = adminConexiones.getConexion(nombreConexion);
 		if(conexiones.containsKey(nombreConexion)) {
 			cerrarConexion(nombreConexion);
 			timers.get(nombreConexion).cancel();
@@ -93,41 +92,24 @@ public class Controlador {
 		AdminTabla adminTabla = new AdminTabla(interfaz, nombreConexion);
 		mapAdminTablas.put(nombreConexion, adminTabla);
 		
-		Timer timer = new Timer();
+		Map<String, String> datosConexion = adminConexiones.getConexion(nombreConexion);
+		Conexion conexion = null;
 		try {
-			Conexion conexion = new Conexion(datosConexion.get("ip"), datosConexion.get("puerto"), datosConexion.get("id"), datosConexion.get("tiempo"));
+			conexion = new Conexion(datosConexion.get("ip"), datosConexion.get("puerto"), datosConexion.get("id"), datosConexion.get("tiempo"));
 			conexiones.put(nombreConexion, conexion);
-
-			timer.scheduleAtFixedRate(new TimerTask() {
-
-				@Override
-				public void run() {
-					String resu = conexion.consultarEstado();
-					if(!resu.equals("")) {
-						DatosMensaje datos = new DatosMensaje(resu);
-						adminTabla.agregarFila(datos);
-						alarmaNivel.checkAlarma(nombreConexion, datos);
-						adminInfo.actualizarDatos(nombreConexion, datos);
-						if(nombreConexion.equals(conexionSeleccionada)) {
-							adminInfo.mostrarDatos(nombreConexion);
-						}
-					}
-					
-				}
-				
-			}, 0, conexion.getTiempo());
-			timers.put(nombreConexion, timer);
-			
-			
-		}
-		catch (IOException e) {
+			Integer tiempo = conexiones.get(nombreConexion).getTiempo();
+			TimerConexion timerConexion = new TimerConexion(this, nombreConexion, tiempo);
+			timers.put(nombreConexion, timerConexion);
+		} catch (IOException e) {
 			adminMensajes.mostrarMensajeError("Error al conectarse con el dispositivo: "+nombreConexion);
 			if(conexiones.containsKey(nombreConexion)) {
 				conexiones.remove(nombreConexion);
-				timer.cancel();
+				timers.get(nombreConexion).cancel();
 				timers.remove(nombreConexion);
-			}
+}
+			e.printStackTrace();
 		}
+		
 		
 	}
 
@@ -215,27 +197,15 @@ public class Controlador {
 		}
 		else {
 			Map<String, String> datosConexion = adminConexiones.getConexion(nombreConexion);
-			System.out.println(velocidadStr);
 			adminConexiones.editarConexion(nombreConexion, nombreConexion, datosConexion.get("ip"), datosConexion.get("puerto"), datosConexion.get("id"), velocidadStr, datosConexion.get("alarmaMin"), datosConexion.get("alarmaMax"));
 			if(conexiones.containsKey(nombreConexion)) {
+				TimerConexion timer = timers.get(nombreConexion);
+				timer.cancel();
+				timers.remove(nombreConexion);
+				
 				conexiones.get(nombreConexion).setTiempo(velocidad);
-				timers.get(nombreConexion).scheduleAtFixedRate(new TimerTask() {
-
-					@Override
-					public void run() {
-						String resu = conexiones.get(nombreConexion).consultarEstado();
-						if(!resu.equals("")) {
-							DatosMensaje datos = new DatosMensaje(resu);
-							alarmaNivel.checkAlarma(nombreConexion, datos);
-							mapAdminTablas.get(nombreConexion).agregarFila(datos);
-							adminInfo.actualizarDatos(nombreConexion, datos);
-							if(nombreConexion.equals(conexionSeleccionada)) {
-								adminInfo.mostrarDatos(nombreConexion);
-							}
-							
-						}
-					}
-				}, 0, velocidad);
+				timer = new TimerConexion(this, nombreConexion, velocidad);
+				timers.put(nombreConexion, timer);
 			}
 			
 		}
@@ -243,7 +213,6 @@ public class Controlador {
 	}
 
 	public void conexionSeleccionada(String nombreConexion) {
-		System.out.println("ConexionSeleccionada "+nombreConexion);
 		conexionSeleccionada = nombreConexion;
 		if(mapAdminTablas.containsKey(nombreConexion)) {
 			mapAdminTablas.get(nombreConexion).actualizarDatosTabla();
@@ -328,6 +297,27 @@ public class Controlador {
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
     }
+
+
+	public void consultarEstado(String nombre) {
+		Conexion conexion = conexiones.get(nombre);
+		
+		String resu = conexion.consultarEstado();
+		if(!resu.equals("")) {
+			DatosMensaje datos = new DatosMensaje(resu);
+			System.out.println("---");
+			System.out.println(conexion.toString());
+			System.out.println(resu+" "+nombre);
+			System.out.println("---");
+			mapAdminTablas.get(nombre).agregarFila(datos);
+			alarmaNivel.checkAlarma(nombre, datos);
+			adminInfo.actualizarDatos(nombre, datos);
+			if(nombre.equals(conexionSeleccionada)) {
+				adminInfo.mostrarDatos(nombre);
+			}
+		}
+		
+	}
 
 	
 

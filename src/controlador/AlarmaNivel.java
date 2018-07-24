@@ -59,9 +59,6 @@ public class AlarmaNivel {
 	}
 	
 	public void checkAlarma(String nombreConexion, DatosMensaje datosMensaje) {
-		System.out.println("checkAlarma");
-		
-		
 		int valorNI = Integer.parseInt(datosMensaje.getValorNI());
 		int valorNm = Integer.parseInt(datosMensaje.getValorNm());
 		int altura = valorNm - valorNI;
@@ -70,13 +67,9 @@ public class AlarmaNivel {
 		
 		double porcentaje = (((double) altura) / (valorNm - valorNM)) * 100;
 
-		
-		
-		System.out.println("porcentaje "+porcentaje);
 		Map<String, String> datos = adminConexiones.getConexion(nombreConexion);
 		Integer alarmaMin = Integer.parseInt(datos.get("alarmaMin"));
 		Integer alarmaMax = Integer.parseInt(datos.get("alarmaMax"));
-		System.out.println("alarmaMin-alarmaMax "+alarmaMin+" "+alarmaMax);
 		if(alarmaMin != -1 && alarmaMin > porcentaje) {
 			clipAlertaMin.start();
 			clipAlertaMin.setFramePosition(0);

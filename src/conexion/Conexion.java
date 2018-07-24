@@ -63,4 +63,8 @@ public class Conexion {
 	public void setTiempo(Integer tiempo) {
 		this.tiempo = tiempo;
 	}
+	
+	public String toString() {
+		return "Conexion: ip "+ip+" puerto "+puerto+" id "+id;
+	}
 }

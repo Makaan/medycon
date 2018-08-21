@@ -134,19 +134,21 @@ public class Controlador {
 		if(mapAdminTablas.get(nombreConexion)!= null) {
 			
 			String[] nombres = AdminTabla.getNombresColumnas();
+			/*
 			String[] nombresNuevos = new String[nombres.length+1];
 			nombresNuevos[0]= nombres[0];
 			nombresNuevos[1]= "HORA";
 			for(int i = 1; i < nombres.length; i++) {
 				nombresNuevos[i+1]= nombres[i];
 			}
+			*/
 			
 			List<String> listaDatos = mapAdminTablas.get(nombreConexion).getDatosTabla();
 			
-			List<String> listaNueva = new LinkedList<String>();
+			/*List<String> listaNueva = new LinkedList<String>();
 			
-			SimpleDateFormat formateadorHora = new SimpleDateFormat("HH:mm:ss"); 
-			SimpleDateFormat formateadorFecha = new SimpleDateFormat("dd-MMM-yyyy"); 
+			//SimpleDateFormat formateadorHora = new SimpleDateFormat("HH:mm:ss"); 
+			//SimpleDateFormat formateadorFecha = new SimpleDateFormat("dd/MMM,yyyy,HH:mm:ss"); 
 			
 			for(String dato: listaDatos) {
 				String tokens[] = dato.split(",");
@@ -154,7 +156,7 @@ public class Controlador {
 				try {
 					Date fecha = AdminTabla.formateador.parse(tokens[0]);
 					resu+= formateadorFecha.format(fecha)+",";
-					resu+= formateadorHora.format(fecha)+",";
+					//resu+= formateadorHora.format(fecha)+",";
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -164,8 +166,8 @@ public class Controlador {
 				}
 				listaNueva.add(resu);
 			}
-			
-			EscritorExcel.exportar(nombresNuevos, listaNueva, nombreArchivo);
+			*/
+			EscritorExcel.exportar(nombres, listaDatos, nombreArchivo);
 		}
 			
 	}
@@ -303,7 +305,7 @@ public class Controlador {
 		
 	}
 
-	public void consultarEstado(String nombre) {
+	public synchronized void  consultarEstado(String nombre) {
 		System.out.println("---");
 		System.out.println("consulta "+nombre);
 		Conexion conexion = conexiones.get(nombre);

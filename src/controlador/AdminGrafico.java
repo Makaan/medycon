@@ -159,7 +159,6 @@ public class AdminGrafico {
 					}
 					
 				}
-				
 				interfaz.actualizarGrafico(ConstructorGrafico.getChart(fechasGrafico, promedioGrafico, "Nivel promedio última hora - "+ nombre));
 				
 				

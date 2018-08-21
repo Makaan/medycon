@@ -3,6 +3,9 @@ package almacenamiento;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.*;
@@ -50,7 +53,16 @@ public class EscritorExcel {
         	String[] tokens = dato.split(",");
         	Row fila = sheet.createRow(numFila);
         	numFila++;
-        	for(int i = 0 ; i < tokens.length; i++) {
+        	//Especial para la fecha
+        	Date fecha = null;
+        	try {
+				fecha = AdminTabla.formateador.parse(tokens[0]);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	fila.createCell(0).setCellValue(new SimpleDateFormat("dd','MMM','yyyy','HH:mm:ss").format(fecha));
+        	for(int i = 1 ; i < tokens.length; i++) {
         		fila.createCell(i).setCellValue(tokens[i]);
         	}
         }

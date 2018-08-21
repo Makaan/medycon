@@ -53,7 +53,7 @@ public class ConstructorGrafico {
 		styler.setLegendSeriesLineLength(12);
 		styler.setDatePattern("E dd - h:mm a");
 		styler.setDecimalPattern("% ");
-		styler.setYAxisMax(1.0);
+		styler.setYAxisMax(1.05);
 		styler.setYAxisMin(0.0);
 		
 	}
